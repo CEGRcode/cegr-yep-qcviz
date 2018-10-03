@@ -1,0 +1,13 @@
+#RUN,SAMPLE,TARGET,HISTORYID,NOTAG,GENOME
+231,12467,Reb1,7eaf3721b05d57f9,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+231,12443,Set1,b5fa151d52cfd400,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+282,14997,Mcm16,b4d40eaa92a2bc65,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+231,12427,Cft1,76606d4e528e4a6c,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+238,13145,Brf1,7e8e14a6b3c95df4,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+#218,11900,Nrd1,89d467cfa8dcf28d,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+275,14534,Orc6,979eccb2ad302efe,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+227,12274,Reb1,97c398216e08a085,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+271,15215,Ssl1,d12d5b60519b3ffd,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+310,17924,BY4741,22457dfe4fb229ef,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+216,11758,Hht2,3bc6ecfc15bb5bd9,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
+#217,11796,Gal4,a229e844193ab9ae,masterNoTags_29_sorted_dedup.bam,sacCer3_cegr
