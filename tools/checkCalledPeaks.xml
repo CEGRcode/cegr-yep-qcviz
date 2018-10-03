@@ -1,0 +1,64 @@
+<tool id="check_called_peaks" name="Check Called Peaks" version="1.0.0">
+    <description> from Peak Callers </description>
+    <requirements>
+        <requirement type="package" version="2.7.14">python</requirement>
+    </requirements>
+    <command>
+    <![CDATA[
+    python $__tool_directory__/checkCalledPeaks.py '$mPeaks' '$refFeature' '$peakThreshold'
+    ]]>
+    </command>
+
+    <inputs>
+      <param name="mPeaks" type="data" format="bed" label="Called peaks in bedformat" help="takes the bedfile output returned by multiGPS" />
+      <param name="refFeature" type="data" format="bed" label="Reference features in bedformat" help="pre-determined bedfile that will be returned in case of peaks less than equal to  peakThreshold" />
+      <param name="peakThreshold" type="integer" value="3" label="Peak Threshold" help="integer value that is used to determine the output" />
+    </inputs>
+
+    <outputs>
+      <data name="outfile" format="bed" from_work_dir="peaks.bed" />
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="mPeaks" ftype="bed" value="sample_peaks.bed" />
+            <param name="refFeature" ftype="bed" value="refFeature.bed"  />
+            <param name="peakThreshold" value="3"/>
+            <output name="outfile" file="calledpeaks1.bed" ftype="bed" />
+        </test>
+        <test>
+            <param name="mPeaks" ftype="bed" value="zero_peaks.bed" />
+            <param name="refFeature" ftype="bed" value="refFeature.bed"  />
+            <param name="peakThreshold" value="3"/>
+            <output name="outfile" file="calledpeaks2.bed" ftype="bed" />
+        </test>
+    </tests>
+
+    <help>
+
+**What it does**
+
+----
+
+Program that works as a conditional and returns a pre-determined bedfile if the number of peaks in the ``multigpsPeaks`` (peaks called by multiGPS) are less than or equal to the ``peakThreshold`` otherwise returns the ``multigpsPeaks`` in bed format.
+
+    ``usage: checkCalledPeaks.py [-h] multigpsPeaks refFeature peakThreshold``
+
+    ``positional arguments:``
+
+    -mPeaks   peak bedfile output from your peak caller
+    -refFeature   pre-determined bedfile that will be returned in case of peaks less than threshold
+    -peakThreshold  Threshold to determine the output
+
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None,
+            author = {Kuntala, Prashant Kumar},
+            title = {None},
+            year = {None},
+            eprint = {None},
+            url = {http://www.pughlab.psu.edu/}
+        }</citation>
+    </citations>
+</tool>

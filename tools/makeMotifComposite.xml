@@ -1,0 +1,46 @@
+<tool id="makeMotifComposite" name="Create Motif Composite" version="1.0.0">
+    <description> plot from tag pileup. </description>
+    <macros></macros>
+    <requirements>
+        <requirement type="package" version="1.0.0">scipy</requirement>
+        <requirement type="package" version="2.1.0">matplotlib</requirement>
+        <requirement type="package" version="2.7.14">python</requirement>
+        <requirement type="package" version="0.22.0">pandas</requirement>
+    </requirements>
+    <command>
+    <![CDATA[
+    python $__tool_directory__/makeMotifComposite.py $signalCDT
+
+    ]]>
+    </command>
+
+    <inputs>
+      <param name="signalCDT" type="data" format="tabular" label="Signal CDT tabular" help="The CDT should be strand separate" />
+    </inputs>
+
+    <outputs>
+      <data name="MotifComposite" format="png" from_work_dir="MotifComposite_sense_antisense.png"/>
+    </outputs>
+
+    <tests>
+    </tests>
+
+    <help>
+<![CDATA[
+**What it does**
+
+Generates a Motif Composite plot from stand separate Signal CDT tabular output from tagpileup.
+
+]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None,
+            author = {Kuntala, Prashant Kumar},
+            title = {None},
+            year = {None},
+            eprint = {None},
+            url = {http://www.pughlab.psu.edu/}
+        }</citation>
+    </citations>
+</tool>

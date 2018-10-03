@@ -1,0 +1,56 @@
+<tool id="find_distance" name="Find Distance" version="1.0.0">
+    <description> from Features to Peaks </description>
+    <macros></macros>
+    <requirements>
+    <requirement type="package" version="1.14.2">numpy</requirement>
+    <requirement type="package" version="2.7.14">python</requirement>
+    <requirement type="package" version="0.22.0">pandas</requirement>
+  </requirements>
+    <command>
+    <![CDATA[
+      python $__tool_directory__/findDistance.py '$peakFile' '$featuresBound' '$refFeature'
+    ]]>
+    </command>
+
+    <inputs>
+      <param name="peakFile" type="data" format="bed" label="Bedfile containing MultiGPS peaks"/>
+      <param name="featuresBound" type="data" format="bed" label=" Bound Features from pickFeatures "/>
+      <param name="refFeature" type="data" format="bed" label=" Reference feature bedfile " help="can be any bedfile corresponding to coding or nonCoding features. example: TES, NFR, CUT, SUT or other"/>
+      <param name="customHistoryLabel" type="text" value="" label="Custom GALAXY history pane label" help=" Optional : replaces the default label given by GALAXY to this tool within current history with your custom label"/>
+    </inputs>
+
+    <outputs>
+       <data name="outfile" format="bed" from_work_dir="finalDist.bed" label="${customHistoryLabel.value} distant features from ${on_string}"/>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="peakFile" ftype="bed" value="peaks.bed" />
+            <param name="featuresBound" ftype="bed" value="boundFeatures.bed"  />
+            <param name="refFeature" ftype="bed" value="nfr.bed"  />
+            <param name="customHistoryLabel" value="NFR"/>
+            <output name="outfile" file="finalDist.bed" ftype="bed" />
+        </test>
+    </tests>
+
+    <help>
+
+**What it does**
+
+----
+
+Finds the closest feature from the reference bedfile for each peak in input bedfile
+and sorts the features from most upstream to downstream. (chooses the nearest distance as the smallest absolute distance in case there is more than one region)
+
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None,
+            author = {Kuntala, Prashant Kumar},
+            title = {None},
+            year = {None},
+            eprint = {None},
+            url = {http://www.pughlab.psu.edu/}
+        }</citation>
+    </citations>
+</tool>

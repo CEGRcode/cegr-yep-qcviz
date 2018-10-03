@@ -1,0 +1,63 @@
+<tool id="cdt_to_heatmap" name="CDT TO HEATMAP" version="1.0.0">
+    <description>Takes in a tab delimited file and creates a heatmap</description>
+    <macros></macros>
+    <command>
+    <![CDATA[
+      python $__tool_directory__/cdtToHeatmap.py -i $input_file -o CDT_Heatmap.png
+
+      ## Setting the quantile values properly.
+      #if str($quantile_type.quantile_type_selector) == "b_option":
+        -q '${quantile_type.quantile}'
+      #else if str($quantile_type.quantile_type_selector) == "t_option":
+        -t '${quantile_type.quantile2}'
+      #end if
+
+      -c $colors -d $header -s $start_col -r $row_num -l $col_num -m '$title' -x '$xlabel' -p $dpi -k $ticks
+    ]]>
+    </command>
+
+    <inputs>
+      <param name="input_file" type="data" format="txt" label="CDT file to Plot" />
+      <param name="colors" type="text" value="0,0,0" label="Plot color [ enter RGB values separated by comma -> example: 192,66,54 ]" />
+      <param name="header" type="text" value="T" label="Header T/F" />
+      <param name="start_col" type="integer" value="2" label="Start Column" />
+      <param name="col_num" type="integer" value="300" label="Column Number after compress" />
+      <param name="row_num" type="integer" value="600" label="Row Number after compress" />
+      <param name="title" type="text" value="All Features" label="Heatmap Title" />
+      <param name="xlabel" type="text" value="distance from midpoint (bp)" label="X-axis label" />
+      <param name="dpi" type="integer" value="100" label="Dots per Inch (dpi) for the image" help="default: 100, max value: 300" />
+      <param name="ticks" type="integer" value="100" label="Ticks for the x-axis" />
+
+      <conditional name="quantile_type">
+        <param name="quantile_type_selector" type="select" display="radio" label="Choose the Contrast paramter">
+            <option value="b_option" selected="true">- b</option>
+            <option value="t_option">-t </option>
+        </param>
+
+        <when value="b_option">
+            <param name="quantile" type="float" value="95" label="Quantile" help="Enter your quantile value above. can take values between (1 to 100)"/>
+        </when>
+
+        <when value="t_option">
+            <param name="quantile2" type="float" value="0.0" label="Absolute tag threshold" help="Enter your custom tag threshold value above. can take values (0 to infinity)"/>
+        </when>
+    </conditional>
+
+    </inputs>
+
+    <outputs>
+      <data name="out_file" format="png" from_work_dir="CDT_Heatmap.png" label="Heatmap (png) on ${on_string}"/>
+    </outputs>
+
+    <tests>
+    </tests>
+
+    <help>
+<![CDATA[
+**What it does**
+
+This script creates a heatmap given a tab-delimited matrix file.
+]]>
+    </help>
+
+</tool>

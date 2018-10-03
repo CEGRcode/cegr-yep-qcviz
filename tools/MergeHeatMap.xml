@@ -1,0 +1,46 @@
+<tool id="MergeHeatMap" name="Merge Heatmaps" version="1.0.0">
+    <description>from individual PNGs. </description>
+    <macros></macros>
+    <requirements>
+        <requirement type="package" version="8.0.112">openjdk</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+    <![CDATA[
+      java -jar '$__tool_directory__/MergeHeatMap.jar'
+      -s $sensePng
+      -a $antiPng
+      ]]>
+    </command>
+
+    <inputs>
+      <param name="sensePng" type="data" format="png" label="Sense Strand Heatmap" />
+      <param name="antiPng" type="data" format="png" label="Anti-Sense Strand Heatmap" />
+    </inputs>
+
+    <outputs>
+      <data name="mergedHeatmap" format="png" from_work_dir='merge.png' />
+    </outputs>
+
+    <tests>
+    </tests>
+
+    <help>
+<![CDATA[
+**What it does**
+
+Takes in two heatmaps PNGs ( sense and anti-sense ) and outputs a single blended (merged) png. The tool takes into account the overlay between the images and calculates the average color wherever necessary.
+
+]]>
+
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None,
+            author = {Lai, William},
+            title = {None},
+            year = {None},
+            eprint = {None},
+            url = {http://www.pughlab.psu.edu/}
+        }</citation>
+    </citations>
+</tool>

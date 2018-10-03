@@ -1,0 +1,38 @@
+<tool id="fimointervaltobed" name="Convert FIMO (Interval) to BED" version="1.0.0">
+    <description> only for (interval) output</description>
+    <requirements>
+    <requirement type="package" version="0.22.0">pandas</requirement>
+    <requirement type="package" version="2.7.14">python</requirement>
+  </requirements>
+    <command>
+        <![CDATA[
+    python $__tool_directory__/fimoIntervalToBed.py $fimoInterval
+
+    ]]>
+    </command>
+
+    <inputs>
+        <param name="fimoInterval" type="data" format="txt" label="Fimo Interval output file"/>
+    </inputs>
+
+    <outputs>
+        <collection name="split_output" type="list" label="${tool.name}">
+            <discover_datasets pattern="(?P&lt;designation&gt;.*)" directory="output" ext="bed" visible="false"/>
+        </collection>
+    </outputs>
+
+    <tests></tests>
+
+    <help>
+        <![CDATA[
+**What it does**
+
+Converts the FIMO interval output file into BED format for each motif that was discovered.
+
+]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None, author = {Kuntala,Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {None} }</citation>
+    </citations>
+</tool>

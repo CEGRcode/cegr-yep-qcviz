@@ -1,0 +1,57 @@
+<tool id="Memer" name="MEMER" version="1.0.0">
+    <description>to report MotifEnrichment and AUROC </description>
+    <macros></macros>
+    <requirements>
+        <requirement type="package" version="8.0.112">openjdk</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+    <![CDATA[
+      java -jar '$__tool_directory__/MotifEnrichment.jar'
+      -s $sample_fasta
+      -c $control_fasta
+      -p $pwm
+      -f $out_header
+      -t $auc_filter_threshold
+      ]]>
+    </command>
+
+    <inputs>
+      <param name="sample_fasta" type="data" format="fasta" label="Sample Fasta file" />
+      <param name="control_fasta" type="data" format="fasta" label="Control Fasta file" />
+      <param name="pwm" type="data" format="txt" label="Input Motifs to be filtered (Transfac format)" help=""/>
+      <param name="out_header" type="text" value="" label="Output Filename Header" help="Used in naming the output files."/>
+      <param name="auc_filter_threshold" type="float" value="0.0" label="AUC Filter Threshold" help="Use to filter out the motifs based on the AUC score calculated on input files. (by default outputs all motifs.)" />
+    </inputs>
+
+    <outputs>
+     <data name="ROC_images_png" format="png" label="${tool.name}">
+          <discover_datasets pattern="([-\w]+\.(?:jpg|gif|png))" visible="true"/>
+      </data>
+      <data name="out_file2" format="txt" from_work_dir='*_motifAUC.txt' label="MEMER-motifAUC (txt)"/>
+      <data name="out_file3" format="txt" from_work_dir='*_FILTER.transfac' label="MEMER-FILTERED transfac motifs"/>
+    </outputs>
+
+    <tests>
+    </tests>
+
+    <help>
+<![CDATA[
+**What it does**
+
+Reports Motif Enrichment for input motifs(transfac format) within the input fasta Sequences. Generates ROC curves for each of the input motif.
+
+]]>
+
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None,
+            author = {Lai, William},
+            title = {None},
+            year = {None},
+            eprint = {None},
+            url = {http://www.pughlab.psu.edu/}
+        }</citation>
+    </citations>
+    <!-- Tool Wrapped by prashant kuntala , date: 16th April, 2018-->
+</tool>
