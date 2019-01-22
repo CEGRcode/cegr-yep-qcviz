@@ -311,7 +311,7 @@ def createWorkflowInvokeFile(invokeInfo,sampleList):
     Function that takes in the invokeInfo data structure and creates a csv file containing details about the history_id, workflow_id, invokation_id and other for each sample processed through this pipeline.
     """
     workflowInfoFile = open('workflowInfo.csv','w')
-    header = 'run,sample,protein,history_id,workflow_id,invoke_id,time'
+    header = '#run,sample,protein,history_id,workflow_id,invoke_id,time'
     workflowInfoFile.write(header+"\n")
     for run,data in invokeInfo.items():
         for sample,inputList in data.items():
