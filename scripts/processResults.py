@@ -6,7 +6,8 @@
 
 
 """
-Program to process the Results downloaded using 'downloadResults.py'
+Program to rename datasets and separate the downloaded results into 
+individual catergorical folders
 
 NOTES:
 -----
