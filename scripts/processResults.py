@@ -223,6 +223,12 @@ if __name__ == '__main__':
                 # print destination
                 print "\033[94m Copying {}\033[0m".format(filename)
                 shutil.copy(source,destination)
+            if filename.startswith(prefix + "_MEME_Motifs"):
+                source = os.path.join(root, filename)
+                destination = os.path.join(memePath,filename)
+                # print destination
+                print "\033[94m Copying {}\033[0m".format(filename)
+                shutil.copy(source,destination)
             if filename.startswith(prefix + "_Subsector"):
                 source = os.path.join(root, filename)
                 destination = os.path.join(subsectorPath,filename)
@@ -257,6 +263,20 @@ if __name__ == '__main__':
                 source = os.path.join(root, filename)
                 desname = prefix + "_chexmix_peaks.bed"
                 destination = os.path.join(peaksPath,desname)
+                # print destination
+                print "\033[94m Copying {}\033[0m".format(filename)
+                shutil.copy(source,destination)
+            if filename.startswith(prefix + "_Peaks_filtered.bed"):
+                source = os.path.join(root, filename)
+                desname = prefix + "_chexmix_filtered_peaks.bed"
+                destination = os.path.join(filteredPeaksPath,desname)
+                # print destination
+                print "\033[94m Copying {}\033[0m".format(filename)
+                shutil.copy(source,destination)
+            if filename.startswith(prefix + "_ChExMix_(all.tabular"):
+                source = os.path.join(root, filename)
+                desname = prefix + "_chexmix_allevents.tabular"
+                destination = os.path.join(allEventsPath,desname)
                 # print destination
                 print "\033[94m Copying {}\033[0m".format(filename)
                 shutil.copy(source,destination)
