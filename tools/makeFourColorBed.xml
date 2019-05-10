@@ -1,37 +1,45 @@
-<tool id="makefourcolorbed" name="Create Four color Bed" version="1.0.0">
-    <description> for FIMO scanned motifs</description>
+<tool id="make_fourcolor_bed" name="Create Four color Bed" version="1.0.0">
+    <description>
+        for FIMO scanned motifs</description>
     <requirements>
         <requirement type="package" version="2.7.14">python</requirement>
     </requirements>
-    <command>
+    <command detect_errors="exit_code">
         <![CDATA[
-    python $__tool_directory__/makeFourColorBed.py '$fimoBED' '$totalTagRankOrder'
+    python '$__tool_directory__/makeFourColorBed.py' '$fimo_bed' '$total_tag_rankorder'
 
     ]]>
     </command>
 
     <inputs>
-        <param name="fimoBED" type="data" format="bed" label="FIMO interval in BED format"/>
-        <param name="totalTagRankOrder" type="data" format="txt" label="File containing the totalTagCount based RankOrder"/>
-        <param name="customHistoryLabel" type="text" value="" label="Custom GALAXY history pane label" help=" Optional : replaces the default label given by GALAXY to this tool within current history with your custom label"/>
+        <param name="fimo_bed" type="data" format="bed" label="FIMO (interval) in BED format"/>
+        <param name="total_tag_rankorder" type="data" format="txt" label="File containing rankOrder sorted by totalTagCount"/>
     </inputs>
 
     <outputs>
-        <data name="fourColorBed" format="bed" from_work_dir="fourcolor.bed" label="${customHistoryLabel.value} bed from ${on_string}"/>
+        <data name="four_color_bed" format="bed" from_work_dir="fourcolor.bed"/>
     </outputs>
 
-    <tests></tests>
+    <tests>
+        <test>
+            <param name="fimo_bed" ftype="bed" value="fourcolor_motif1.bed"/>
+            <param name="total_tag_rankorder" ftype="txt" value="totaltagexample.txt"/>
+            <output name="four_color_bed" file="fourcolor.bed" ftype="bed"/>
+        </test>
+    </tests>
 
     <help>
         <![CDATA[
 **What it does**
 
-program to create the sorted bed file for the four color plot. Sort order is determined by the total tag count calculated by the makeMotifHeatmap.py
+Creates the sorted bed file for the four color plot. Sort order is determined by the total tag count calculated for each bound site by the motif.
 
 ]]>
     </help>
     <citations>
         <citation type="bibtex">
-            @unpublished{None, author = {Kuntala,Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {None} }</citation>
+            @unpublished{None, author = {Kuntala, Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {http://www.pughlab.psu.edu/} }
+        </citation>
     </citations>
+
 </tool>

@@ -1,18 +1,18 @@
-<tool id="fimointervaltobed" name="Convert FIMO (Interval) to BED" version="1.0.0">
-    <description> only for (interval) output</description>
+<tool id="fimo_interval_to_bed" name="Convert FIMO (Interval)" version="1.0.0">
+    <description>to individual Motif Bed</description>
     <requirements>
-    <requirement type="package" version="0.22.0">pandas</requirement>
-    <requirement type="package" version="2.7.14">python</requirement>
-  </requirements>
-    <command>
+        <requirement type="package" version="0.22.0">pandas</requirement>
+        <requirement type="package" version="2.7.14">python</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
         <![CDATA[
-    python $__tool_directory__/fimoIntervalToBed.py $fimoInterval
+    python '$__tool_directory__/fimoIntervalToBed.py' '$fimo_interval'
 
     ]]>
     </command>
 
     <inputs>
-        <param name="fimoInterval" type="data" format="txt" label="Fimo Interval output file"/>
+        <param name="fimo_interval" type="data" format="txt" label="Fimo Interval File"/>
     </inputs>
 
     <outputs>
@@ -21,18 +21,41 @@
         </collection>
     </outputs>
 
-    <tests></tests>
+    <tests>
+        <test>
+            <param name="fimo_interval" value="sampleFimo.interval"/>
+
+            <output_collection name="split_output" type="list">
+                <element name="Motif_1.bed">
+                    <assert_contents>
+                        <has_text_matching expression="(chr[0-9]*)"/>
+                    </assert_contents>
+                </element>
+                <element name="Motif_2.bed">
+                    <assert_contents>
+                        <has_text_matching expression="(chr[0-9]*)"/>
+                    </assert_contents>
+                </element>
+                <element name="Motif_3.bed">
+                    <assert_contents>
+                        <has_text_matching expression="(chr[0-9]*)"/>
+                    </assert_contents>
+                </element>
+            </output_collection>
+
+        </test>
+    </tests>
 
     <help>
         <![CDATA[
 **What it does**
 
-Converts the FIMO interval output file into BED format for each motif that was discovered.
+Converts the FIMO interval file into individual bed files for each motif that was discovered.
 
 ]]>
     </help>
     <citations>
         <citation type="bibtex">
-            @unpublished{None, author = {Kuntala,Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {None} }</citation>
+            @unpublished{None, author = {Kuntala, Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {http://www.pughlab.psu.edu/} }</citation>
     </citations>
 </tool>

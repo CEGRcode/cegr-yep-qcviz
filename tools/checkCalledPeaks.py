@@ -1,24 +1,18 @@
 #!/usr/bin/python
-#
-# author : prashant kumar kuntala
-# date   : 10th August,2018
-#
-# last modified : 1st October, 2018
-#
+
 """
-Returns a pre-determined bedfile if #peaks "called" by multiGPS
+Returns a pre-determined bedfile if #peaks "called" by ChExMix
 are less than or equal to the peakThreshold o/w returns the peaks.
 """
 
 import argparse
-import pprint
 
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'multigpsPeaks', help='peak bedfile output from multiGPS')
+        'peaks', help='bedfile output from ChExMix or any peak caller')
     parser.add_argument(
         'refFeature', help='pre-determined bedfile that will be returned in case of peaks < threshold')
     parser.add_argument('peakThreshold', type=int,
@@ -26,16 +20,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # reading the number of lines in the input peak file
-    openfile = open(args.multigpsPeaks, 'r').readlines()
+    openfile = open(args.peaks, 'r').readlines()
 
-    peakList = [] # to remove 2-micron from called peaks
+    peakList = []  # to remove 2-micron from called peaks
     for line in openfile:
         temp = line.split("\t")
         if temp[0] != "chr2-micron":
             peakList.append(line)
-
-    #print len(peakList)
-    #pprint.pprint(peakList)
 
     # checking the threshold for peaks
     if len(peakList) <= args.peakThreshold or peakList[0] == '\n' or len(peakList) == 0:

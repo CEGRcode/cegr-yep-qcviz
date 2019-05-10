@@ -1,43 +1,53 @@
 <tool id="pick_features" name="Pick Features " version="1.0.0">
-    <description> from reference bedfile </description>
+    <description>
+        from reference bedfile
+    </description>
     <requirements>
         <requirement type="package" version="2.7.14">python</requirement>
         <requirement type="package" version="0.22.0">pandas</requirement>
     </requirements>
-    <command>
-    <![CDATA[
-    python $__tool_directory__/pickFeatures.py '$bedIntersectFile' '$refFeature'
-    ]]>
+    <command detect_errors="exit_code">
+        <![CDATA[
+        python '$__tool_directory__/pickFeatures.py' '$bed_intersect_file' '$ref_feature' '$sector_threshold'
+        ]]>
     </command>
 
     <inputs>
-      <param name="bedIntersectFile" type="data" format="bed" label="Bedtools intersect file between Sectors and peaks" help="Output from bedtools intersect using (-wa -u)" />
-      <param name="refFeature" type="data" format="bed" label="Reference features in bedformat" help="Reference bedfile from which the regions will be picked" />
-      <param name="customHistoryLabel" type="text" value="" label="Custom GALAXY history pane label" help=" Optional : replaces the default label given by GALAXY to this tool within current history with your custom label"/>
+        <param name="bed_intersect_file" type="data" format="bed" label="Bedtools intersect file between Sectors and peaks" help="Output from bedtools intersect using (-wa -u)"/>
+        <param name="ref_feature" type="data" format="bed" label="Reference features in bedformat" help="Reference bedfile from which the regions will be picked"/>
+        <param name="sector_threshold" type="integer" value="2" label=" Sector Threshold "/>
     </inputs>
 
     <outputs>
-      <data name="outfile1" format="bed" from_work_dir="boundFeatures.bed" label="${customHistoryLabel.value} bound Features from ${on_string}"/>
-      <data name="outfile2" format="tabular" from_work_dir="geneCounts.csv" label="${customHistoryLabel.value} bound Categories from ${on_string}"/>
+        <data name="outfile1" format="bed" from_work_dir="boundFeatures.bed"/>
+        <data name="outfile2" format="tabular" from_work_dir="geneCounts.csv"/>
     </outputs>
 
     <tests>
         <test>
-            <param name="bedIntersectFile" ftype="bed" value="intersect.bed" />
-            <param name="refFeature" ftype="bed" value="nfr.bed"  />
-            <param name="customHistoryLabel" value="NFR"/>
-            <output name="outfile1" file="boundFeatures.bed" ftype="bed" />
-            <output name="outfile2" file="categories.csv" ftype="csv" />
-        </test>        
+            <param name="bed_intersect_file" ftype="bed" value="intersect.bed"/>
+            <param name="ref_feature" ftype="bed" value="nfr.bed"/>
+            <param name="sector_threshold"  value="2" />
+            <output name="outfile1" file="boundFeatures.bed" ftype="bed"/>
+            <output name="outfile2" file="categories.csv" ftype="tabular"/>
+        </test>
+        <test>
+            <param name="bed_intersect_file" ftype="bed" value="zero_intersect.bed"/>
+            <param name="ref_feature" ftype="bed" value="nfr.bed"/>
+            <param name="sector_threshold"  value="2" />
+            <output name="outfile1" file="zero_bound.bed" ftype="bed"/>
+            <output name="outfile2" file="zero.csv" ftype="tabular"/>
+        </test>
     </tests>
 
     <help>
+        <![CDATA[
 
 **What it does**
 
 ----
 
-Program to pick the bound features (bed regions) from a reference feature bed file using the output from bedtools intersect (-u -wa) between SECTORS and multigpsPeaks.
+Pick the bound features (bed regions) from a reference feature bed file using the output from bedtools intersect (-u -wa) between ``SECTORS`` and ``Peaks``.
 
 ``usage: pickFeatures.py [-h] bedIntersectFile refFeature``
 
@@ -49,17 +59,12 @@ Program to pick the bound features (bed regions) from a reference feature bed fi
 ``optional arguments:``
   -h, --help        show this help message and exit
 
+        ]]>
     </help>
 
     <citations>
         <citation type="bibtex">
-            @unpublished{None,
-            author = {Kuntala, Prashant Kumar},
-            title = {None},
-            year = {None},
-            eprint = {None},
-            url = {http://www.pughlab.psu.edu/}
-        }</citation>
+            @unpublished{None, author = {Kuntala, Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {http://www.pughlab.psu.edu/} }</citation>
     </citations>
 
 </tool>

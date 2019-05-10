@@ -1,40 +1,33 @@
 #!/usr/bin/python
-#
-# author : prashant kumar kuntala
-# date   : 17th April, 2018
-#
-# last modified : 18th July, 2018
-#
 
 from __future__ import division
-import sys,argparse
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
+import sys
+import argparse
 import scipy
 import math
 
 """
-
-Tutorial links for pyplot
-https://matplotlib.org/users/pyplot_tutorial.html
-https://matplotlib.org/api/pyplot_api.html
-
-For hex codes to display colors on the plots
-https://htmlcolorcodes.com/
-
+Program to create the composite plots from signal and control tag pile up CDT data matrix
 """
 
-parser = argparse.ArgumentParser(prog='python makeComposite.py', usage='%(prog)s [-h] [SAMPLE_CDT] [CONTROL_CDT] [compositeTitle][--chex CHEX] [--shex SHEX] [--bhex BHEX] [--vhex VHEX]')
-parser.add_argument('sample',metavar='SAMPLE_CDT',nargs='?',help='Sample CDT file from Tag Pileup Frequency')
-parser.add_argument('control',metavar='CONTROL_CDT',nargs='?', help='Control CDT file from Tag Pileup Frequency')
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    'sampleData', help='Sample CDT file from Tag Pileup Frequency')
+parser.add_argument(
+    'controlData', help='Control CDT file from Tag Pileup Frequency')
 parser.add_argument('compositeTitle', help='Title for the compositePlot')
-parser.add_argument('--chex', help="Color in Hexcode for the control in the plot (default:gray)")
-parser.add_argument('--shex', help='Color in Hexcode for the sample in the plot (default:red)')
-parser.add_argument('--bhex', help='Color in Hexcode for the background color in the plot (default:white)')
-parser.add_argument('--vhex', help='Color in Hexcode for the center line in the plot (default:black)')
-parser.add_argument('--region',type=int, help='Plots the composite within specified region from center (default:2000 , plots -2000bp to 2000bp)')
+parser.add_argument(
+    'signalColor', help='Color in Hexcode for the sample in the plot ')
+parser.add_argument(
+    'controlColor', help="Color in Hexcode for the control in the plot ")
+parser.add_argument(
+    'backgroundColor', help='Color in Hexcode for the background color in the plot')
+parser.add_argument(
+    'centerLineColor', help='Color in Hexcode for the center line in the plot')
+parser.add_argument('dpi', help='Dots per inch (DPI) for the image')
+
 args = parser.parse_args()
 
 
@@ -43,30 +36,27 @@ def findRelativeMaxPoint(data):
     Function to find the max and min for the input data of CDT values
     """
 
-    values = list(data.iloc[0]) # selecting the first row values as a list
+    values = list(data.iloc[0])  # selecting the first row values as a list
     maxi = max(values)    # finding the maximum of the values
-    max_index = values.index(maxi) # finding the index of the max value within the list of values
-    zero_relative = float(list(data.iloc[[],[max_index]])[0]) # co-ordinate on the composite plot
+    # finding the index of the max value within the list of values
+    max_index = values.index(maxi)
+    # co-ordinate on the composite plot
+    zero_relative = float(list(data.iloc[[], [max_index]])[0])
 
-    return [zero_relative,maxi]
+    return [zero_relative, maxi]
+
 
 # reading the CDT file.
 try:
-    signalData = pd.read_csv(args.sample, sep='\t',index_col=0)
-    controlData = pd.read_csv(args.control, sep='\t',index_col=0)
-except:
+    signalData = pd.read_csv(args.sampleData, sep='\t', index_col=0)
+    controlData = pd.read_csv(args.controlData, sep='\t', index_col=0)
+except IOError:
     print "\nUnable to OPEN input files !\n"
     parser.print_help()
     sys.exit()
 
-
-# Calculating the region to plot
-if args.region:
-    start_col = 2000 - int(args.region)
-    stop_col = 2000 + int(args.region)
-else:
-    start_col = 0
-    stop_col = 4000
+print "signalData shape : {}".format(signalData.shape)
+print "controlData shape : {}".format(controlData.shape)
 
 # prepare PlotData for sample
 signalData = signalData.round(decimals=3)
@@ -75,66 +65,90 @@ signalData = signalData.round(decimals=3)
 mPeak = findRelativeMaxPoint(signalData)
 print mPeak
 
-sx = list(signalData.iloc[:,start_col:stop_col].values.tolist())[0]
-sy = list(signalData.iloc[:,start_col:stop_col].columns.astype(float))
+# retrieve the row index from the dataframe
+rowIndex = list(signalData.index)
 
-# pre# prepare PlotData for control
-controlData = controlData.round(decimals=3)
-cx = list(controlData.iloc[:,start_col:stop_col].values.tolist())[0]
-cy = list(controlData.iloc[:,start_col:stop_col].columns.astype(float))
+# retrieve data for signal dataset
+sx = list(signalData.loc[rowIndex[0]])
 
-#matplotlib.rcParams['font.family'] = "Arial"
-# used to set the ceiling to be the top tick in the y-axis
-fig,ax = plt.subplots()
+# retrieve values for y axis and convert them to float
+sy = list(signalData.columns)
+sy = map(float, sy)
 
-# plotting the data for composite plots
-if (args.shex):
-    plt.plot(sy,sx,color="#"+args.shex,label="Signal")
-else:
-    plt.plot(sy,sx,color="red",label="Signal")
+
+# retrieve the row index from the controlData dataframe
+rowIndex = list(controlData.index)
+
+# retrieve data for control dataset
+cx = list(controlData.loc[rowIndex[0]])
+
+# retrieve values for y axis and convert them to float
+cy = list(controlData.columns)
+cy = map(float, cy)
+
+
+# setting the font
+# matplotlib.rcParams['font.family'] = "Arial"
+
+# generating the figure
+fig, ax = plt.subplots()
+
+# plotting the signal data
+plt.plot(sy, sx, color="#" + args.signalColor, label="Signal")
+
+# adding the background color
 d = scipy.zeros(len(sx))
-if (args.bhex):
-    plt.fill_between(sy,sx, where=sx>=d, interpolate=False, color="#"+args.bhex)
-if (args.chex):
-    plt.plot(cy,cx,color="#"+args.chex,label="Control")
+plt.fill_between(sy, sx, where=sx >= d, interpolate=False,
+                 color="#" + args.backgroundColor)
+
+# plotting the control data
+plt.plot(cy, cx, color="#" + args.controlColor, label="Control")
+
+# adding the vertical line at midpoint
+plt.axvline(x=0, color="#" + args.centerLineColor, linestyle='--', linewidth=2)
+
+# adding yticks and label
+plt.yticks([0, math.ceil(mPeak[1])], fontsize=18)
+plt.ylabel('Tags', fontsize=18)
+
+# setting the padding space between the y-axis label and the y-axis
+if math.ceil(mPeak[1]) < 10:
+    ax.yaxis.labelpad = -16
 else:
-    plt.plot(cy,cx,color="gray",label="Control")
-if (args.vhex):
-    plt.axvline(x=0, color="#"+args.vhex, linestyle='--',linewidth=2)
-else:
-    plt.axvline(x=0, color='black', linestyle='--',linewidth=2)
-
-
-# plt.legend(loc='upper right')
-#plt.yticks(range(0,int(mPeak[1])+6,2))
-
-plt.yticks([0,math.ceil(mPeak[1])],fontsize=18)
-plt.ylabel('Tags',fontsize=18)
+    ax.yaxis.labelpad = -25
 
 # adding text to the composite plot. (the peak location.)
 # https://matplotlib.org/api/_as_gen/matplotlib.pyplot.text.html
 
-# position of the peak relative to 0
-#value = '(' +str(int(mPeak[0]))+')'
-#plt.text(x=-450, y=(int(mPeak[1])-3), s=value, fontsize=8)
+# changing the co-ordinates to position the value to the top right corner
+left, width = 0.28, .7
+bottom, height = .28, .7
+right = left + width
+top = bottom + height
 
-# setting the ylimits for ticks
-ax.set_ylim(0,math.ceil(mPeak[1]))
+# position of the peak relative to 0
+value = '(' + str(int(mPeak[0])) + ')'
+# plt.text(x=-480, y=(int(math.ceil(mPeak[1])-0.2)), s=value, fontsize=12)
+plt.text(right, top, value,
+         horizontalalignment='right',
+         verticalalignment='top',
+         transform=ax.transAxes, fontsize=14)
+
+# setting the ylimits for yticks
+ax.set_ylim(0, math.ceil(mPeak[1]))
 
 # removing the x-axis ticks
 plt.xticks([])
-# plt.xticks(range(-500,750,250))
 
-plt.title(args.compositeTitle,fontsize=25)
-# plt.axis('off')
-# plt.show()
-
+# adding the title and increase the spine width
+plt.title(args.compositeTitle, fontsize=25)
 plt.setp(ax.spines.values(), linewidth=2)
 
 # referance for margins
-#https://matplotlib.org/api/_as_gen/matplotlib.pyplot.margins.html#matplotlib.pyplot.margins
-#plt.margins(0.01)
-plt.margins(0)
-plt.tick_params(length=8,width=2)
+# https://matplotlib.org/api/_as_gen/matplotlib.pyplot.margins.html#matplotlib.pyplot.margins
 
-plt.savefig('Composite_plot.png',frameon=False,dpi=300,pad_inches=0.05,bbox_inches='tight')
+plt.margins(0)
+plt.tick_params(length=8, width=2)
+
+plt.savefig('Composite_plot.png', frameon=False, dpi=int(
+    args.dpi), pad_inches=0.05, bbox_inches='tight')

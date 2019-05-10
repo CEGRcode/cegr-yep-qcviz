@@ -1,22 +1,13 @@
 #!/usr/bin/python
-#
-# author : prashant kumar kuntala
-# date   : 11th June, 2018
-#
-# last modified : 3rd October, 2018
-#
 
 """
-Finds the closest feature from the reference bedfile for each peak in input bedfile
-and sorts the features from most upstream to downstream. (chooses the nearest distance as the smallest absolute distance in case there is more than one region)
+This script first finds the distance between each peak and bound features, to find the bound features that have atleast one peak associated with them (chooses the nearest distance as the smallest absolute distance in case there is more than one region). Lastly, reports the corresponding reference Feature for each bound feature sorted by the most upstream to downstream distance.
 """
 
 from __future__ import division
-import argparse
-import os
-import sys
-import pprint
 import pandas as pd
+import argparse
+import pprint
 
 
 def getMidPoints(peakfile, refFeature):
@@ -25,8 +16,7 @@ def getMidPoints(peakfile, refFeature):
     """
     pfile = open(peakfile, 'r').readlines()
     if pfile[0].startswith('chr') is not True:
-        pfile.pop(0)
-        # pprint.pprint(pfile.pop(0)) # removing the first line from the peaks bed file
+        pfile.pop(0)  # removing the first line from the peaks bed file
 
     peaks = []
     for line in pfile:
@@ -169,12 +159,13 @@ if __name__ == '__main__':
         'boundFeatures', help='boundFeatures that are handPicked')
     parser.add_argument(
         'refFeature', help='Main bedfile to pick regions to make the final bedfile to plot')
+    parser.add_argument(
+        'sectorThreshold', help='minimum sectors that need to be found for further steps')
     args = parser.parse_args()
 
     # reading the files for feature count
-    boundData = open(args.boundFeatures,'r').readlines()
-    refData = open(args.refFeature,'r').readlines()
-
+    boundData = open(args.boundFeatures, 'r').readlines()
+    refData = open(args.refFeature, 'r').readlines()
 
     if len(boundData) == len(refData):
         print "Bound Features are EQUAL to the REFERENCE FEATURE, returning the REFERENCE BED to plot"
@@ -184,7 +175,14 @@ if __name__ == '__main__':
             outfile.write(line)
         outfile.flush()
         outfile.close()
-
+    elif len(boundData) <= int(args.sectorThreshold):
+        print "Bound Features are LESS than or EQUAL to the SECTOR THRESHOLD, returning the REFERENCE BED to plot"
+        # creating the final bedfile to make the heatmap
+        outfile = open("finalDist.bed", 'w')
+        for line in refData:
+            outfile.write(line)
+        outfile.flush()
+        outfile.close()
     else:
         print "Bound Features are Less than the REFERENCE FEATUREs, calculating the distance "
         # retrieve the mid points before calculating distances.

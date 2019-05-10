@@ -1,0 +1,42 @@
+<tool id="format_peaks_to_bigbed" name="Format Peaks" version="1.0.0">
+    <description>to UCSC bigBed.</description>
+    <requirements>
+        <requirement type="package" version="2.7.14">python</requirement>
+        <requirement type="package" version="0.22.0">pandas</requirement>
+    </requirements >
+    <command detect_errors="exit_code">
+        <![CDATA[
+    python '$__tool_directory__/formatPeaks.py' '$peaks' '$expand_window'
+    ]]>
+    </command>
+
+    <inputs>
+        <param name="peaks" type="data" format="bed" label="Peak bedfile"/>
+        <param name="expand_window" type="text" value="0" label="Expand length from peakmidpoint"/>
+    </inputs>
+
+    <outputs>
+        <data name="formated_peaks" format="bed" from_work_dir="formatedPeaks.bed"/>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="peaks" ftype="bed" value="peaks.bed" />
+            <param name="expand_window" value="0"/>
+            <output name="formated_peaks" file="formatedPeaks.bed" ftype="bed" />
+        </test>
+    </tests>
+
+    <help>
+        <![CDATA[
+**What it does**
+
+Processes the peak bed file to UCSC standards, which can be used to create bigBed.
+
+]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None, author = {Kuntala, Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {http://www.pughlab.psu.edu/} }</citation>
+    </citations>
+</tool>

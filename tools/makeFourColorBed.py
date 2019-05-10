@@ -1,17 +1,10 @@
 #!/usr/bin/python
-#
-# author : prashant kumar kuntala
-# date   : 6th September,2018
-#
-# last modified : 6th September,2018
-#
 
 """
 creates the sorted bed file for 4 color plots
 """
 
 import argparse
-import pprint
 
 if __name__ == '__main__':
 
@@ -19,7 +12,7 @@ if __name__ == '__main__':
     parser.add_argument(
         'fimoBed', help='Bed file generated from FIMO interval file.')
     parser.add_argument(
-        'totalTagRankOrder', help='totalTagRankOrder.csv file generated from makeMotifHeatmap script')
+        'totalTagRankOrder', help='totalTagRankOrder.txt file generated from makeMotifHeatmap script')
     args = parser.parse_args()
 
     # reading the fimo bed.
@@ -33,7 +26,8 @@ if __name__ == '__main__':
             print " Skipping : {}".format(line)
 
     # reading the rankOrder
-    rankOrder = open(args.totalTagRankOrder, 'r').readlines()[0].strip().split(",")
+    rankOrder = open(args.totalTagRankOrder, 'r').readlines()[
+        0].strip().split(",")
     # pprint.pprint(rankOrder)
 
     outfile = open('fourcolor.bed', 'w')

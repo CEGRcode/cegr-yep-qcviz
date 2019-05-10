@@ -1,35 +1,39 @@
-<tool id="makeMotifComposite" name="Create Motif Composite" version="1.0.0">
+<tool id="make_motif_composite" name="Create Motif Composite" version="1.0.0">
     <description> plot from tag pileup. </description>
-    <macros></macros>
     <requirements>
         <requirement type="package" version="1.0.0">scipy</requirement>
         <requirement type="package" version="2.1.0">matplotlib</requirement>
         <requirement type="package" version="2.7.14">python</requirement>
         <requirement type="package" version="0.22.0">pandas</requirement>
     </requirements>
-    <command>
+    <command detect_errors="exit_code">
     <![CDATA[
-    python $__tool_directory__/makeMotifComposite.py $signalCDT
-
+    python '$__tool_directory__/makeMotifComposite.py' '$signal' '$dpi'
     ]]>
     </command>
 
     <inputs>
-      <param name="signalCDT" type="data" format="tabular" label="Signal CDT tabular" help="The CDT should be strand separate" />
+      <param name="signal" type="data" format="tabular" label="Signal CDT tabular" help="The CDT should be strand separate" />
+      <param name="dpi"  type="integer" value="150" label="Dots per inch (DPI) for the plot"/>
     </inputs>
 
     <outputs>
-      <data name="MotifComposite" format="png" from_work_dir="MotifComposite_sense_antisense.png"/>
+      <data name="motif_composite" format="png" from_work_dir="motifcomposite_sense_antisense.png"/>
     </outputs>
 
     <tests>
+        <test>
+            <param name="signal" ftype="tabular" value="motifComposite.tabular" />
+            <param name="dpi"   value="150" />
+            <output name="motif_composite" file="motifcomposite_sense_antisense.png" ftype="png" compare="sim_size"/>
+        </test>
     </tests>
 
     <help>
 <![CDATA[
 **What it does**
 
-Generates a Motif Composite plot from stand separate Signal CDT tabular output from tagpileup.
+Takes in a strand separate Experimental CDT (tabular) file from ``tag_pileup_frequency`` and creates the motif specific composite plots.
 
 ]]>
     </help>

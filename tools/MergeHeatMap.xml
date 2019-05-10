@@ -1,34 +1,38 @@
-<tool id="MergeHeatMap" name="Merge Heatmaps" version="1.0.0">
+<tool id="merge_heatmap" name="Merge Heatmaps" version="1.0.0">
     <description>from individual PNGs. </description>
-    <macros></macros>
     <requirements>
         <requirement type="package" version="8.0.112">openjdk</requirement>
     </requirements>
     <command detect_errors="exit_code">
     <![CDATA[
       java -jar '$__tool_directory__/MergeHeatMap.jar'
-      -s $sensePng
-      -a $antiPng
+      -s '$sense_png'
+      -a '$anti_png'
       ]]>
     </command>
 
     <inputs>
-      <param name="sensePng" type="data" format="png" label="Sense Strand Heatmap" />
-      <param name="antiPng" type="data" format="png" label="Anti-Sense Strand Heatmap" />
+      <param name="sense_png" argument="-s" type="data" format="png" label="Sense Heatmap" />
+      <param name="anti_png" argument='-a' type="data" format="png" label="Anti-Sense Heatmap" />
     </inputs>
 
     <outputs>
-      <data name="mergedHeatmap" format="png" from_work_dir='merge.png' />
+      <data name="merged_heatmap" format="png" from_work_dir='merge.png' />
     </outputs>
 
     <tests>
+        <test>
+            <param name="sense_png" value="sense.png" />
+            <param name="anti_png" value="anti.png" />
+            <output name="merged_heatmap" file="merge.png" ftype="png" compare="sim_size"/>
+        </test>
     </tests>
 
     <help>
 <![CDATA[
 **What it does**
 
-Takes in two heatmaps PNGs ( sense and anti-sense ) and outputs a single blended (merged) png. The tool takes into account the overlay between the images and calculates the average color wherever necessary.
+Takes in two heatmaps PNGs ( sense and anti-sense ) and outputs a single blended (merged) png. The tool takes into account the overlay between the images and calculates the average color necessary at pixel level. Both the PNGs must be of same dimensions to work.
 
 ]]>
 
@@ -36,7 +40,7 @@ Takes in two heatmaps PNGs ( sense and anti-sense ) and outputs a single blended
     <citations>
         <citation type="bibtex">
             @unpublished{None,
-            author = {Lai, William},
+            author = {Lai, William KM},
             title = {None},
             year = {None},
             eprint = {None},
