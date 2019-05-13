@@ -201,7 +201,7 @@ RUN_WORKFLOW = yepQCVIZ
 # Below are (key=value) corresponds to (inputLabel:datasetNameInHistory) for the workflow.
 # Hence these values are [CASE-SENSITIVE]
 
-# the experimental_bam (value) below is a place holder and it will be replaced with sample specific dataset name within the script before executing the workflow.
+# the experimental_bam and control_bam (value) below is a place holder and it will be replaced with sample specific dataset name within the script before executing the workflow.
 
 experimental_bam = filtered.bam
 control_bam = masterNoTag_20180928.bam
@@ -251,13 +251,14 @@ PNG_LIST = ['NFR','TSS','TES','GENEMID','EnrichedNFR','EnrichedTSS','EnrichedTES
 ```
 yepRunInfo file contents:
 
-    #RUN,SAMPLE,TARGET,HISTORYID,NOTAG,GENOME
-    300,17114,Lsm1,38c0950fb6b21ce5,masterNotag_20161128.bam,sacCer3_cegr
-    300,17115,Mbf1,23a1ee6b9374c61a,masterNotag_20161128.bam,sacCer3_cegr
-    300,17116,Asg1,2387d03a336686ee,masterNotag_20161128.bam,sacCer3_cegr
-    300,17117,Rif1,4326e44612443a1a,masterNotag_20161128.bam,sacCer3_cegr
-    300,17118,Nab2,b5357255c274b4c0,masterNotag_20161128.bam,sacCer3_cegr
-    300,17119,Rfa1,a890d357826ac24a,masterNotag_20161128.bam,sacCer3_cegr
+    #RUN,SAMPLE,TARGET,HISTORYID,NOTAG,GENOME,TREATMENT
+    271,15215,Ssl1,d12d5b60519b3ffd,masterNoTag_20180928.bam,sacCer3_cegr,
+    271,15216,Pho2,4ec1b03254ee8680,masterNoTag_20180928.bam,sacCer3_cegr,
+    271,15217,Rpt6,9f071edfc9cf1e78,masterNoTag_20180928.bam,sacCer3_cegr,
+    350,21070,Reb1,e8b9714067972508,masterNoTagHS_181126.bam,sacCer3_cegr,HS6
+    367,22525,Reb1,cafc28259219a486,masterNoTagHS_181126.bam,sacCer3_cegr,HS6
+    331,19390,Reb1,bed4667625c6c086,masterNoTagOX6_190513.bam,sacCer3_cegr,H2O2_6min
+    367,22540,Reb1,3453e4f78002fa33,masterNoTagOX6_190513.bam,sacCer3_cegr,OX
 
 ```
 - `workflowInfo.csv` is created by the `runYepQCVIZ.py` after invoking the workflow on all the samples. This is crucial for downloading the datasets.

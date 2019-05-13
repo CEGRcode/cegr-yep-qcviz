@@ -270,6 +270,12 @@ def getInputsAndParams(gi,uploadInfo,libs,workflowID,confInputs,confParams,sampl
                         datasetName = sample+"_"+sampleList[sample][1]+"_filtered.bam"
                         # print datasetName
                         inputs[k] = inputDict[datasetName]
+                    # Using the custom masterNoTag assigned based on the treatments in runInfoFile
+                    elif label == 'control_bam':
+                        datasetName = sampleList[sample][3]
+                        # print datasetName
+                        inputs[k] = inputDict[datasetName]
+                        # print inputs[k]
                     else:
                         inputs[k] = inputDict[confInputs[label]]
 
@@ -327,7 +333,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('configFile',help='yepQcViz.conf file that has galaxy url and apikey information.')
-    parser.add_argument('runInfo',help='yepqc_run_info.txt file that has the sample information')
+    parser.add_argument('runInfo',help='yepqcRunInfo.csv file that has the sample information')
     args = parser.parse_args()
 
     # to store the samples from runInfo file, stores a list with sample numbers as keys.
@@ -350,7 +356,7 @@ if __name__ == '__main__':
     try:
         runinfo = open(args.runInfo,'r').readlines()
         if len(runinfo) <= 0:
-            print "\033[91m ERROR ! run_info doesnt have any samples ! EXITING \033[0m"
+            print "\033[91m ERROR ! yepqcRunInfo.csv doesn't have any samples ! EXITING \033[0m"
             exit()
         else:
             for line in runinfo:
@@ -360,16 +366,16 @@ if __name__ == '__main__':
                     line = line.strip()
                     temp = line.split(',')
                     if temp[1] not in sampleList.keys():
-                        sampleList[temp[1]] = [temp[0],temp[2],temp[3]]
+                        sampleList[temp[1]] = [temp[0],temp[2],temp[3],temp[4]]
                     else:
-                        print "\n \033[91m WARNING ! SAMPLE number is repeated in the run_info, not including {} \033[0m".format(line)
+                        print "\n \033[91m WARNING ! SAMPLE number is repeated in the yepqcRunInfo.csv, not including {} \033[0m".format(line)
 
                     if temp[0] not in libList.keys():
                         libList[temp[0]] = [temp[1]]
                     else:
                         libList[temp[0]].append(temp[1])
     except:
-        print "\033[91m ERROR ! Unable to read yepqc_run_info.txt file or file not found ! \033[0m"
+        print "\033[91m ERROR ! Unable to read yepqcRunInfo.csv file or file not found ! \033[0m"
         exit()
 
     # parsing through the config file and creating a galaxy instance
@@ -388,7 +394,7 @@ if __name__ == '__main__':
     # create all libraries, sample subfolders and sample histories
     print "\n\033[94m  \033[95m  Creating Libraries and histories : \033[0m \033[0m "
     libs,hlibs = createDataLibrariesAndHistories(gi,libList,sampleList,config['BASIC']['LIB_PREFIX'])
-    
+
     # finding the de-duplicated bam for each sample and add it to the sample folder.
     print "\n\033[94m  \033[95m  Searching for the Filterd BAM file from Core Pipeline History : \033[0m \033[0m "
     libs,hlibs = findDeDupBAM(gi,libList,sampleList,libs,hlibs)
