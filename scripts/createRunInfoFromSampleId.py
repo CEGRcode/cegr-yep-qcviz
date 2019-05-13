@@ -36,6 +36,12 @@ def fetchSampleData(apiKey,query):
     results = r.json()
     # pprint.pprint(len(results['data']))
 
+    # Heatshock related alias on PEGR
+    HSList = ['HeatShock','Heat Shock','HS3','HS6','HS']
+
+    # Oxidative stress related alias on PEGR
+    OXList = ['H2O2_180min','H2O2_6min','OX','H2O2_30min']
+
     print " \033[94m  \033[94m INFO : \n{} \033[0m \033[0m ".format(results['message'])
     # pprint.pprint(results['data'])
 
@@ -48,7 +54,17 @@ def fetchSampleData(apiKey,query):
         # retrieve only the YEP project sample histories.
         if sample['experiments'][0]['alignments'][0]['genome'] == 'sacCer3_cegr':
             # yepSampleCount = yepSampleCount + 1
-            string = "{},{},{},{},{},{}\n".format(sample['experiments'][0]['runId'],sample['id'],sample['target'],sample['histories'][0],'masterNoTags_29_sorted_dedup.bam',sample['experiments'][0]['alignments'][0]['genome'])
+
+            # DEBUG
+            print "{}:{}\n".format(sample['id'],sample['treatments'])
+
+            # set the masterNoTag (control_bam) based on the treatment infomation
+            if sample['treatments'] in HSList:
+                string = "{},{},{},{},{},{},{}\n".format(sample['experiments'][0]['runId'],sample['id'],sample['target'],sample['histories'][0],'masterNoTagHS_181126.bam',sample['experiments'][0]['alignments'][0]['genome'],sample['treatments'])
+            elif sample['treatments'] in OXList:
+                string = "{},{},{},{},{},{},{}\n".format(sample['experiments'][0]['runId'],sample['id'],sample['target'],sample['histories'][0],'masterNoTagOX6_190513.bam',sample['experiments'][0]['alignments'][0]['genome'],sample['treatments'])
+            else:
+                string = "{},{},{},{},{},{},{}\n".format(sample['experiments'][0]['runId'],sample['id'],sample['target'],sample['histories'][0],'masterNoTag_20180928.bam',sample['experiments'][0]['alignments'][0]['genome'],sample['treatments'])
 
     return string
 
@@ -74,7 +90,7 @@ if __name__ == '__main__':
 
     # creating the runInfoFile
     outfile = open("yepqcRunInfo.csv",'w')
-    header = "#RUN,SAMPLE,TARGET,HISTORYID,NOTAG,GENOME\n"
+    header = "#RUN,SAMPLE,TARGET,HISTORYID,NOTAG,GENOME,TREATMENT\n"
     outfile.write(header)
     print " \033[94m  \033[94m Creating the yepQcViz run info file ! \033[0m \033[0m "
     for line in runInfoContent:
