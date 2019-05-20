@@ -97,7 +97,7 @@ if __name__ == '__main__':
         proteinName = str(data[2]).upper()
 
         # creating the prefix that will be added to all the downloaded files
-        prefixName = sampleNo+"_"+proteinName+"_"
+        prefixName = sampleNo+"_"
 
         count = [0,0,0,0,0,0,0,0] # to keep track of Motif specific 4colorplots,Merged heatmaps etc
 
@@ -119,8 +119,8 @@ if __name__ == '__main__':
         hist = gi.histories.show_history(data[3])
         # pprint.pprint(hist)
 
-        # checking if the history is ok, successfully finished without errors.
-        if hist['state'] == 'ok':
+        # checking if the history is ok, queued and errors (downloads whatever datasets are 'ok', for all history categories)
+        if hist['state'] == 'ok' or hist['state'] == 'queued' or hist['state'] == 'error':
             # retrieve the ok datasets
             datasets = hist['state_ids']['ok']
 
