@@ -3,7 +3,7 @@ chr4	449214	450214	Name=Cbf1_chr4+;Alias=;ID=Cbf1-31-chr4;pvalue=1.53e-05;qvalue
 chr14	628261	629261	Name=Cbf1_chr14+;Alias=;ID=Cbf1-4-chr14;pvalue=2.1e-06;qvalue= 1;sequence=AGTCACGTGC;	56.8	+
 chr3	113888	114888	Name=Cbf1_chr3+;Alias=;ID=Cbf1-7-chr3;pvalue=2.34e-05;qvalue= 1;sequence=AGTCACATGA;	46.3	+
 chr7	496534	497534	Name=Cbf1_chr7-;Alias=;ID=Cbf1-43-chr7;pvalue=3.69e-05;qvalue= 1;sequence=TATCACGTGT;	44.3	-
-chr2	237712	238712	Name=Cbf1_chr2-;Alias=;ID=Cbf1-16-chr2;pvalue=2.34e-05;qvalue= 1;sequence=AGTCACATGA;	46.3	-
+chr2	237712	238712	Name=Cbf1_chr2-;Alias=;ID=Cbf1-16-chr2;pvalue=2.34e-05;qvalue= 1;sequence=AGTCACATGA;	46.3	+
 chr8	105199	106199	Name=Cbf1_chr8-;Alias=;ID=Cbf1-22-chr8;pvalue=3.49e-05;qvalue= 1;sequence=AATCACATGA;	44.6	-
 chr16	555460	556460	Name=Cbf1_chr16+;Alias=;ID=Cbf1-24-chr16;pvalue=2.72e-05;qvalue= 1;sequence=GATCACATGA;	45.6	+
 chr10	435921	436921	Name=Cbf1_chr10-;Alias=;ID=Cbf1-41-chr10;pvalue=2.89e-05;qvalue= 1;sequence=AATCACGTGT;	45.4	-
