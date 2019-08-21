@@ -1,0 +1,49 @@
+<tool id="process_bedgraph" name="Process genomeCoverageBed" version="1.0.0">
+    <description> output.</description>
+    <requirements>
+        <requirement type="package" version="2.7.14">python</requirement>
+        <requirement type="package" version="0.22.0">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+    <![CDATA[
+    python '$__tool_directory__/process_genome_coverage.py' '$coverage_file' '$strand'
+    ]]>
+    </command>
+
+    <inputs>
+      <param name="coverage_file" type="data" format="txt" label="genomeCoverageBed output file" help="you should use (-bga) (strand) option while generating the bedtools genomeCoverage" />
+      <param name="strand" type="text" value="+" label="Bedgraph Stand" />
+
+    </inputs>
+
+    <outputs>
+      <data name="processed_bedgraph" format="bedgraph" from_work_dir="processed.bedGraph" />
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="coverage_file" ftype="txt" value="genomeCoverage.bedgraph" />
+            <param name="strand" value="+" />
+            <output name="processed_bedgraph" file="processed.bedGraph" ftype="bedgraph" />
+        </test>
+    </tests>
+
+    <help>
+<![CDATA[
+**What it does**
+
+Processes the genomecov bedgraph file to UCSC standard bedgraph, which can be to create bigWigs.
+
+]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None,
+            author = {Kuntala, Prashant Kumar},
+            title = {None},
+            year = {None},
+            eprint = {None},
+            url = {http://www.pughlab.psu.edu/}
+        }</citation>
+    </citations>
+</tool>

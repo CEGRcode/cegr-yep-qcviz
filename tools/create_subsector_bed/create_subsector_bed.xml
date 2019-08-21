@@ -1,0 +1,46 @@
+<tool id="create_subsector_bed" name="Create SubSector " version="1.0.0">
+    <description>
+        bed from subsectors and reference features
+    </description>
+    <requirements>
+        <requirement type="package" version="2.7.14">python</requirement>
+        <requirement type="package" version="0.22.0">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+        <![CDATA[
+      python '$__tool_directory__/create_subsector_bed.py' '$sector_rankorder' '$ref_feature' '$sector_threshold'
+    ]]>
+    </command>
+
+    <inputs>
+        <param name="sector_rankorder" type="data" format="txt" label="File containing Gene rankOrders"/>
+        <param name="ref_feature" type="data" format="bed" label="Feature file to extract genes"/>
+        <param name="sector_threshold" type="integer" value="2" label=" Sector Threshold "/>
+    </inputs>
+
+    <outputs>
+        <data name="subsector_bed" format="bed" from_work_dir="boundSubSectors.bed"/>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="sector_rankorder" ftype="txt" value="subsectorRankOrder.txt" />
+            <param name="ref_feature" ftype="bed" value="referenceFeature.bed" />
+            <param name="sector_threshold" value="21" />
+
+            <output name="subsector_bed" file="boundSubSectors.bed" ftype="bed" />
+        </test>
+    </tests>
+
+    <help>
+        <![CDATA[
+**What it does**
+
+Creates a  bed file for subsectors. This generated file is used to create a tag pileup heatmap for subsectors.
+    ]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None, author = {Kuntala,Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {http://www.pughlab.psu.edu/} }</citation>
+    </citations>
+</tool>

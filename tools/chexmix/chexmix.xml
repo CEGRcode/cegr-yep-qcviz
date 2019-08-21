@@ -1,0 +1,535 @@
+<tool id="chexmix" name="ChExMix" version="0.1.0">
+    <description>characterizes protein-DNA binding subtypes in ChIP-exo experiments</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <requirements>
+        <requirement type="package" version="8.0.112">openjdk</requirement>
+        <requirement type="package" version="1.3.23">graphicsmagick</requirement>
+        <requirement type="package" version="4.11.2">meme</requirement>
+    </requirements>
+    <command detect_errors="aggressive">
+        <![CDATA[
+            #set output_dir = $output_html.files_path
+            mkdir -p $output_dir &&
+            java -jar '$__tool_directory__/chexmix.jar'
+
+            ## General options
+            --design '$build_design_file'
+            --threads \${GALAXY_SLOTS:-4}
+            --geninfo '$chromInfo'
+            --back '$back'
+
+            ## Do not run the parallel version of meme.
+            --meme1proc
+
+            ## ChIP-exo variant takes noread2 parameter
+            #for $condition_items in $condition_repeat:
+                #if str($condition_items.experiment_type) == 'chipexo':
+                    --noread2
+                #end if
+            #end for
+
+            ## Flag to produce appropriate html output
+            --galaxyhtml
+
+            #if str($motif_prior_cond.motif_prior) == 'yes':
+                #if str($fasta_type.fasta_type_selector) == 'history':
+                    --seq '${fasta_type.input_database}'
+                #else:
+                    --seq '${fasta_type.input_database.fields.path}'
+                #end if
+            #end if
+
+            ## Advanced options
+            #set aoc = $advanced_options_cond
+
+            #if str($aoc.advanced_options) == 'display':
+                #set general = $aoc.general
+                #set rloc = $general.reads_limits_options_cond
+
+                #set scaling = $aoc.scaling_section
+                #set sdc = $scaling.scale_data_cond
+                #set fscaling = $sdc.fixed_scaling_cond
+
+                #set run_chexmix = $aoc.running_chexmix
+
+
+                ## Limits on how many reads
+                #if str($rloc.reads_limits) == 'yes':
+                    --fixedpb $rloc.fixedpb
+                    --poissongausspb $rloc.poissongausspb
+                    --mappability $rloc.mappability
+                    #if str($rloc.nocache) == 'true':
+                        --nocache
+                    #end if
+                    #if str($rloc.nonunique) == 'true':
+                        --nonunique
+                    #end if
+                #end if
+
+                ## Scaling data
+                #if str($sdc.scale_data) == 'yes':
+                    --scalewin $sdc.scalewin
+                    #if str($fscaling.fixed_scaling) == 'yes':
+                        --fixedscaling $fscaling.fixedscaling
+                    #end if
+                    #if str($sdc.noscaling) == 'true':
+                        --noscaling $sdc.noscaling
+                    #end if
+                    #if str($sdc.medianscale) == 'true':
+                        --medianscale $sdc.medianscale
+                    #end if
+                    #if str($sdc.regressionscale) == 'true':
+                        --regressionscale $sdc.regressionscale
+                    #end if
+                    #if str($sdc.sesscale) == 'true':
+                        --sesscale $sdc.sesscale
+                    #end if
+                    #if str($sdc.plotscaling) == 'true':
+                        --plotscaling $sdc.plotscaling
+                    #end if
+                #end if
+
+                ## Running ChExMix
+                --round $run_chexmix.round
+                #if str($run_chexmix.nomodelupdate) == 'true':
+                    --nomodelupdate
+                #end if
+                --minmodelupdateevents $run_chexmix.minmodelupdateevents
+                --prlogconf $run_chexmix.prlogconf
+                #if $run_chexmix.fixedalpha > 0:
+                    --fixedalpha $run_chexmix.fixedalpha
+                #end if
+                --alphascale $run_chexmix.alphascale
+                --betascale $run_chexmix.betascale
+                --epsilonscale $run_chexmix.epsilonscale
+                #if str($run_chexmix.peakf) != 'None':
+                    --peakf '$run_chexmix.peakf'
+                #end if
+                #if str($run_chexmix.exclude) != 'None':
+                    --excludebed '$run_chexmix.exclude'
+                #end if
+                #if str($run_chexmix.readdistributionfile) != 'None':
+                    --d '$run_chexmix.readdistributionfile'
+                #end if
+
+                ## Finding ChExMix substypes
+                #set $subtype = $aoc.subtypes
+
+                #if str($subtype.nomotifs) == 'true':
+                    --nomotifs
+                #end if
+                #if str($subtype.nomotifprior) == 'true':
+                    --nomotifprior
+                #end if
+                #if $subtype.mememinw > 0:
+                    --mememinw $subtype.mememinw
+                #end if
+                #if $subtype.mememaxw > 0:
+                    --mememaxw $subtype.mememaxw
+                #end if
+                #if $subtype.memenmotifs > 0:
+                    --memenmotifs $subtype.memenmotifs
+                #end if
+                #if $subtype.minroc > 0:
+                    --minroc $subtype.minroc
+                #end if
+                #if $subtype.minmodelupdaterefs > 0:
+                    --minmodelupdaterefs $subtype.minmodelupdaterefs
+                #end if
+
+                #if str($subtype.noclustering) == 'true':
+                    --noclustering
+                #end if
+
+                --pref $subtype.pref
+                --numcomps $subtype.numcomps
+                --win $subtype.win
+
+                ## Reporting Binding events
+                #set $bind_events = $aoc.report_events
+                --q $bind_events.qvalue
+                --minfold $bind_events.minfold
+
+            #end if
+
+            2>&1
+
+            --out '$output_html.files_path'
+            #if str($save_design_file) == 'yes':
+                && cp '$build_design_file' '$output_design_file'
+            #end if
+            && mv $output_dir/*.html '$output_html'
+            && mv $output_dir/*.all.events.table '$all_events_table'
+            && mv $output_dir/*.counts '$replicates_counts'
+	        && mv $output_dir/*.bed '$output_bed'
+
+        ]]>
+    </command>
+
+    <configfiles>
+        <configfile name="build_design_file"><![CDATA[#for $condition_items in $condition_repeat:
+    #for $signal_items in $condition_items.signal_repeat:
+        #if str($signal_items.fixedreadcount_cond.fixedreadcount_select) == 'yes':
+            #set $frc = $signal_items.fixedreadcount_cond.fixedreadcount
+        #else:
+            #set $frc = ''
+        #end if
+${signal_items.signal}	Signal	${signal_items.signal.ext.upper()}	${condition_items.condition_name}	${signal_items.replicate_name}	${condition_items.experiment_type}	${frc}
+    #end for
+    #for $control_items in $condition_items.control_repeat:
+        #if str($control_items.specify_replicate_name_cond.specify_replicate_name) == 'yes':
+            #set $rn = $control_items.specify_replicate_name_cond.replicate_name
+        #else:
+            #set $rn = ''
+        #end if
+        #if str($control_items.fixedreadcount_cond.fixedreadcount_select) == 'yes':
+            #set $frc = $control_items.fixedreadcount_cond.fixedreadcount
+        #else:
+            #set $frc = ''
+        #end if
+${control_items.control}	Control	${control_items.control.ext.upper()}	${condition_items.condition_name}	${rn}	${condition_items.experiment_type}	${frc}
+    #end for
+#end for ]]></configfile>
+    </configfiles>
+
+    <inputs>
+        <!-- condition repeat section -->
+        <repeat name="condition_repeat" title="Condition" min="1">
+            <param name="condition_name" type="text" value="cond" label="Condition name">
+                <validator type="empty_field"/>
+            </param>
+            <param name="experiment_type" type="select" display="radio" label="Experiment type for this replicate">
+                <option value="chipexo" selected="True">ChIP-exo</option>
+                <option value="chipseq">ChIP-seq</option>
+            </param>
+
+            <!-- signal repeat section -->
+            <repeat name="signal_repeat" title="Signal" min="1">
+                <param name="signal" type="data" format="bam,bed,scidx" label="Select signal" help="Supported formats are bam, bed and scidx" argument="--expt">
+                    <validator type="unspecified_build"/>
+                </param>
+                <param name="replicate_name" type="text" value="1" label="Replicate name">
+                    <validator type="empty_field"/>
+                </param>
+                <expand macro="cond_fixedreadcount"/>
+            </repeat>
+
+            <!-- control repeat section -->
+            <repeat name="control_repeat" title="Control" min="0">
+                <param name="control" type="data" format="bam,bed,scidx" label="Select control" help="Optional, supported formats are bam, bed and scidx" argument="--ctrl">
+                    <validator type="unspecified_build"/>
+                </param>
+                <conditional name="specify_replicate_name_cond">
+                    <param name="specify_replicate_name" type="select" label="Specify replicate name?" help="Optional for control.  If used, the control will only be used for the corresponding named signal replicate">
+                        <option value="no" selected="True">No</option>
+                        <option value="yes">Yes</option>
+                    </param>
+                    <when value="yes">
+                        <param name="replicate_name" type="text" optional="true" label="Replicate name"/>
+                    </when>
+                    <when value="no"/>
+                </conditional>
+                <expand macro="cond_fixedreadcount"/>
+            </repeat>
+
+        </repeat>
+
+        <param name="save_design_file" type="select" display="radio" label="Output design file?">
+            <option value="no" selected="true">No</option>
+            <option value="yes">Yes</option>
+        </param>
+
+        <param name="back" type="data" format="txt" label="File containing Markov background model for the genome" help="Required for motif-finding or use a motif-prior within ChExMix" argument="--back"/>
+
+        <conditional name="motif_prior_cond">
+            <param  name="motif_prior" type="select" label="Set Motif prior?" help="Uses meme to identify subtypes">
+                <option value="no" selected="True">No</option>
+                <option value="yes">Yes</option>
+            </param>
+            <when value="yes">
+                <conditional name="fasta_type">
+                    <param name="fasta_type_selector" type="select" label="Fasta Sequences" help="used for finding subtypes by running motif-finding or using a motif-prior within ChExMix" argument="--seq">
+                        <option value="cached" selected="true">Locally Cached sequences</option>
+                        <option value="history" >Sequences from your history</option>
+                    </param>
+                    <when value="cached">
+                        <param name="input_database" type="select" label="Genome to search">
+                            <options from_data_table="all_fasta" />
+                        </param>
+                    </when>
+                    <when value="history">
+                        <param name="input_database" type="data" format="fasta" label="Sequences"/>
+                    </when>
+                </conditional>
+            </when>
+            <when value="no"/>
+        </conditional>
+
+        <!-- Advanced options -->
+        <conditional name="advanced_options_cond">
+            <param name="advanced_options" type="select" label="Advanced options">
+                <option value="hide" selected="true">Hide</option>
+                <option value="display">Display</option>
+            </param>
+
+            <when value="display">
+
+                <!-- General section -->
+                <section name="general" title="Loading Data" expanded="false">
+                    <conditional name="reads_limits_options_cond">
+                        <param
+                            name="reads_limits"
+                            type="select"
+                            label="Set limits on how many reads can have their 5′ end at the same position in each replicate?"
+                            help="Default behavior is to estimate a global per-base limit from a Poisson distribution parameterized by the number of reads divided by the number of mappable bases in the genome. The per-base limit is set as the count corresponding to the 10^-7 probability level from the Poisson.">
+                            <option value="no" selected="True">No</option>
+                            <option value="yes">Yes</option>
+                        </param>
+                        <when value="no"/>
+                        <when value="yes">
+                            <param name="fixedpb" type="integer" value="0" min="0" label="Fixed per-base limit" help="Zero value estimates from background model" argument="--fixedpb"/>
+                            <param name="poissongausspb" type="integer" value="0" min="0" label="Poisson threshold for filtering per base" help="Filter per base using the specified Poisson threshold parameterized by a local Gaussian sliding window" argument="--poissongausspb"/>
+                            <param name="mappability" type="float" value="0.0" min="0.8" label="Fraction of the genome that is mappable for these experiments" argument="--mappability"/>
+                            <param name="nocache" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Turn off caching of the entire set of experiments?" help="Run slower with less memory" argument="--nocache"/>
+                            <param name="nonunique" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Use non-unique reads?" argument="--nonunique"/>
+                        </when>
+                    </conditional>
+                </section>
+                <!-- Scaling Section -->
+                <section name="scaling_section" title="Scaling Data" expanded="false">
+                    <conditional name="scale_data_cond">
+                        <param  name="scale_data" type="select" label="Set data scaling parameters?" help="Default behavior is to scale signal to corresponding controls using the Normalization of ChIP-seq (NCIS) method.[Liang et.al]">
+                            <option value="no">No</option>
+                            <option value="yes" selected="True">Yes</option>
+                        </param>
+                        <when value="yes">
+
+                            <conditional name="fixed_scaling_cond">
+                                <param  name="fixed_scaling" type="select" label="Multiply control counts by total tag count ratio and then by this factor ">
+                                    <option value="no" selected="True">No</option>
+                                    <option value="yes">Yes</option>
+                                </param>
+                            <when value="no"/>
+                            <when value="yes">
+                                <param name="fixedscaling" type="float" value="0.0" min="0.0" label="Multiply control counts by total tag count ratio and then by this factor" help="" argument="--fixedscaling"/>
+                            </when>
+                            </conditional>
+
+                            <param name="scalewin" type="integer" min="0" value="500" label="Window size for estimating scaling ratios" help="The value is the number of base pairs.  Use something much smaller than the default if scaling via SES (e.g. 200)." argument="--scalewin"/>
+
+                            <param name="noscaling" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Use signal vs control scaling?" argument="--noscaling" help="Flag to turn off auto estimation of signal vs control scaling factor."/>
+
+
+                            <param name="medianscale" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Use the median signal/control ratio as the scaling factor?"  help="Flag to use scaling by median ratio of binned tag counts. Default = scaling by NCIS." argument="--medianscale"/>
+
+                            <param name="regressionscale" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Use scaling by regression on binned tag counts?"  help="Flag to use scaling by regression on binned tag counts. Default = scaling by NCIS" argument="--regressionscale"/>
+
+                            <param  name="sesscale" type="select" label="Estimate scaling factor by SES?" help="SES: Diaz, et al. Stat Appl Genet Mol Biol. 2012" argument="--sesscale">
+                                <option value="no" selected="True">No</option>
+                                <option value="yes">Yes</option>
+                            </param>
+
+                            <param name="sesscale" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Estimate scaling factor by SES?" help="SES: Diaz, et al. Stat Appl Genet Mol Biol. 2012" argument="--sesscale"/>
+
+
+                            <param  name="plotscaling" type="select" >
+                                <option value="no" selected="True">No</option>
+                                <option value="yes">Yes</option>
+                            </param>
+
+                            <param name="plotscaling" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Plot diagnostic information for the chosen scaling method?" argument="--plotscaling" help="Flag to plot diagnostic information for the chosen scaling method"/>
+
+                        </when>
+                        <when value="no" />
+                    </conditional>
+                </section>
+                <!-- Running ChEXMix -->
+                <section name="running_chexmix" title="Running ChExMix" expanded="true">
+                    <param name="round" type="integer" value="3" min="0" label="Maximum number of model update rounds" argument="--round"/>
+
+                    <param name="nomodelupdate" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Perform binding model updates?" argument="--nomodelupdate"/>
+
+                    <param name="minmodelupdateevents" type="integer" value="50" min="0" label="Minimum number of events to support an update" argument="--minmodelupdateevents"/>
+
+                    <param name="prlogconf" type="integer" value="-6" label="Poisson log threshold for potential region scanning" argument="--prlogconf"/>
+
+                    <param name="fixedalpha" type="integer" value="0" min="0" label="Impose this alpha" help="The alpha parameter is a sparse prior on binding events in the ChExMix model. It can be interpreted as a minimum number of reads that each binding event must be responsible for in the model. (--fixedalpha)"/>
+
+                    <param name="alphascale" type="float" value="1.0" min="0" label="Alpha scaling factor" argument="--alphascale"/>
+
+                    <param name="betascale" type="float" value="0.05" min="0" label="Beta scaling factor" argument="--betascale"/>
+
+                    <param name="epsilonscale" type="float" value="0.2" min="0" label="Epsilon scaling factor" argument="--epsilonscale"/>
+
+                    <param name="peakf" type="data" optional="True" format="tabular" label="Optional Peak File" help="File of peaks to initialize component positions" argument="--peakf" />
+
+                    <param name="exclude" type="data" optional="True" format="bed" label="Optional file containing a set of regions to ignore while running ChExMix" help="Ideally exclude the mitochondrial genome and other blacklisted regions that contain artifactual accumulations of reads in both signal and control experiments." argument="--excludebed"/>
+
+                    <param name="readdistributionfile" type="data" optional="True" format="tabular" label="Optional binding event read distribution file for initializing models" help="A default initial distribution appropriate for ChIP-exo data is used if this option is not specified." argument="--d" />
+                </section>
+                <!-- Finding ChExMix subtypes -->
+                <section name="subtypes" title="Finding ChExMix Subtypes" expanded="false">
+                    <param name="nomotifs" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Turn off motif-finding ?" argument="--nomotifs"/>
+                    <param name="nomotifprior" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Turn off only Motif priors?" argument="--nomotifprior"/>
+                    <param name="mememinw" type="integer" value="8" label="Minimum motif width for MEME" argument="--mememinw"/>
+                    <param name="mememaxw" type="integer" value="21" label="Maximum motif width for MEME" argument="--mememaxw"/>
+                    <param name="memenmotifs" type="integer" value="3" label="Number of Motifs" help="MEME motifs found in each condition (default=3)" argument="--memenmotifs"/>
+                    <param name="minroc" type="float" value="0.7" label="Minimum ROC for motif reporting" argument="--minroc"/>
+
+                    <param name="minmodelupdaterefs" type="integer" value="25" label="Minimum number of motif reference to support an subtype distribution update" help="default=25" argument="--minmodelupdaterefs"/>
+
+                    <param name="noclustering" type="boolean" truevalue="true" falsevalue="false" checked="false" label="Turn off Clustering ?" help="Flag to turn off read distribution clustering" argument="--noclustering"/>
+
+                    <param name="pref" type="float" value="-0.1" label="Preference value for read distribution clustering" argument="--pref"/>
+
+                    <param name="numcomps" type="integer" value="500" label="Number of components to cluster" argument="--numcomps"/>
+
+                    <param name="win" type="integer" value="150" label="Read profile window size" argument="--win"/>
+                </section>
+                <!-- Reporting binding events -->
+                <section name="report_events" title="Reporting Binding Events" expanded="true">
+                    <param name="qvalue" type="float" value="0.01" label="Minimum Q-value" argument="--q"/>
+                    <param name="minfold" type="float" value="1.5" label="Minimum event fold-change vs scaled control" argument="--minfold"/>
+                </section>
+
+            </when>
+            <when value="hide"/>
+        </conditional>
+
+    </inputs>
+
+    <outputs>
+        <data name="output_design_file" format="tabular" label="${tool.name} (design file) on ${on_string}">
+            <filter>save_design_file == 'yes'</filter>
+        </data>
+        <data name="output_bed" format="bed" label="${tool.name} (bed) on ${on_string}"/>
+        <data name="output_html" format="html" label="${tool.name} (html) on ${on_string}"/>
+        <data name="replicates_counts" format="tabular" label="${tool.name} (replicates counts) on ${on_string}"/>
+        <data name="all_events_table" format="tabular" label="${tool.name} (all events table) on ${on_string}"/>
+    </outputs>
+    <tests>
+        <test>
+            <repeat name="condition_repeat">
+                <repeat name="signal_repeat">
+                    <param name="signal" value="testr.scidx" ftype="scidx" dbkey="sacCer3"/>
+                </repeat>
+            </repeat>
+            <param name="back" value="geninfo.txt" ftype="txt"/>
+            <param name="advanced_options" value="hide"/>
+            <output name="output_html" file="ChExMix_results.html" ftype="html" compare="sim_size"/>
+            <output name="output_bed" file="chexmix_output_bed1.bed" ftype="bed"/>
+            <output name="all_events_table" file="chexmix_all_events_table1.tabular" ftype="tabular"/>
+            <output name="replicates_counts" file="chexmix_replicates_counts1.tabular" ftype="tabular"/>
+        </test>
+        <test>
+            <repeat name="condition_repeat">
+                <repeat name="signal_repeat">
+                    <param name="signal" value="testr.scidx" ftype="scidx" dbkey="sacCer3"/>
+                </repeat>
+                <repeat name="control_repeat">
+                    <param name="control" value="ctrlr.scidx" ftype="scidx" dbkey="sacCer3"/>
+                </repeat>
+            </repeat>
+            <param name="back" value="geninfo.txt" ftype="txt"/>
+            <param name="advanced_options" value="hide"/>
+            <output name="output_html" file="ChExMix_results2.html" ftype="html" compare="sim_size"/>
+            <output name="output_bed" file="chexmix_output_bed2.bed" ftype="bed"/>
+            <output name="all_events_table" file="chexmix_all_events_table2.tabular" ftype="tabular"/>
+            <output name="replicates_counts" file="chexmix_replicates_counts2.tabular" ftype="tabular"/>
+        </test>
+    </tests>
+    <help>
+
+**What it does**
+
+ChExMix aims to characterize protein-DNA binding subtypes in ChIP-exo experiments. ChExMix assumes that different regulatory complexes will result in different protein-DNA crosslinking signatures in ChIP-exo data, and thus analysis of ChIP-exo sequencing tag patterns should enable detection of multiple protein-DNA binding modes for a given regulatory protein. ChExMix uses a mixture modeling framework to probabilistically model the genomic locations and subtype membership of protein-DNA binding events, leveraging both ChIP-exo tag enrichment patterns and DNA sequence information. In doing so, ChExMix offers a more principled and robust approach to characterizing binding subtypes than simply clustering binding events using motif information.
+
+.. class:: infomark
+
+Report Issues at ChEXMix github_ repository.
+
+.. _github : https://github.com/seqcode/chexmix
+
+-----
+
+**Options**
+
+* **Genome:**
+
+    - **--seq** : fasta seq directory reqd if finding motif
+    - **--back** : Markov background model file reqd if finding motif
+
+* **Loading Data:**
+
+    - **--expt** : experimental file name AND **--format** : [SAM/BED/IDX]
+    - **--ctrl** : control file name (optional argument. must be same format as expt files)
+    - **--design** :  experiment design file name to use instead of --expt and --ctrl; see website for format (being created from inputs within this wrapper.)
+    - **--fixedpb** : fixed per base limit (default: estimated from background model)
+    - **--poissongausspb** : filter per base using a Poisson threshold parameterized by a local - Gaussian sliding window
+    - **--nonunique** : [flag to use non-unique reads]
+    - **--mappability** : fraction of the genome that is mappable for these experiments (default=0.8)
+    - **--nocache** : [flag to turn off caching of the entire set of experiments (i.e. run slower with less memory)]
+
+* **Scaling control vs signal counts:**
+
+    - **--noscaling** : [flag to turn off auto estimation of signal vs control scaling factor]
+    - **--medianscale** : [flag to use scaling by median ratio (default = scaling by NCIS)]
+    - **--regressionscale** : [flag to use scaling by regression (default = scaling by NCIS)]
+    - **--sesscale** : [flag to use scaling by SES (default = scaling by NCIS)]
+    - **--fixedscaling** : multiply control counts by total tag count ratio and then by this factor (default: NCIS)
+    - **--scalewin** : window size for scaling procedure (default=10000)
+    - **--plotscaling** : [flag to plot diagnostic information for the chosen scaling method]
+
+* **Running ChExMix:**
+
+    - **--round** : max. model update rounds (default=3)
+    - **--nomodelupdate** : [flag to turn off binding model updates]
+    - **--minmodelupdateevents** : minimum number of events to support an update (default=100)
+    - **--prlogconf** : Poisson log threshold for potential region scanning (default=-6)
+    - **--alphascale** : alpha scaling factor (default=1.0)
+    - **--betascale** : beta scaling factor (default=0.05)
+    - **--epsilonscale** : epsilon scaling factor (default=0.2)
+    - **--fixedalpha** : impose this alpha (default: set automatically)
+    - **--excludebed** : bedfile containing regions to ignore
+    - **--peakf** : file of peaks to initialize component positions (optional, see the website for format)
+
+* **Finding ChExMix subtypes using motif:**
+
+    - **--memepath** : path to the meme bin dir (default: meme is in $PATH)
+    - **--nomotifs** : [flag to turn off motif-finding and motif priors]
+    - **--nomotifprior** : [flag to turn off motif priors only]
+    - **--memenmotifs** :  number of motifs MEME should find for each condition (default=3)
+    - **--mememinw** : minw arg for MEME (default=6)
+    - **--mememaxw** : maxw arg for MEME (default=18)
+    - **--memeargs** : additional args for MEME (default=  -dna -mod zoops -revcomp -nostatus)
+    - **--minroc** : minimum motif ROC value (default=0.7)
+    - **--minmodelupdaterefs** : minimum number of motif reference to support an subtype distribution update (default=50)
+
+* **Finding ChExMix subtypes using read distribution clustering:**
+
+    - **--noclustering** : [flag to turn off read distribution clustering]
+    - **--pref** : preference value for read distribution clustering (default=-0.1)
+    - **--numcomps** : number of components to cluster (default=500)
+    - **--win** : window size of read profiles (default=150)
+
+* **Reporting binding events:**
+
+    - **--q** : Q-value minimum (default=0.01)
+    - **--minfold** : minimum event fold-change vs scaled control (default=1.5)
+
+
+    </help>
+
+    <citations>
+        <citation type="doi">10.1093/bioinformatics/bty703</citation>
+        <citation type="bibtex">
+            @article{Liang2012,
+            journal = {BMC Bioinformatics},
+            author = {Liang, Ketes},
+            title = {Normalization of ChIP-seq data with control},
+            year = {2012},}
+        </citation>
+    </citations>
+</tool>

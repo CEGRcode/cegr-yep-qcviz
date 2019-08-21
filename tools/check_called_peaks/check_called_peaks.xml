@@ -1,0 +1,66 @@
+<tool id="check_called_peaks" name="Check Called Peaks" version="1.0.0">
+    <description> from Peak Callers </description>
+    <requirements>
+        <requirement type="package" version="2.7.14">python</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+    <![CDATA[
+    python '$__tool_directory__/check_called_peaks.py' '$peaks' '$ref_feature' '$peak_threshold'
+    ]]>
+    </command>
+
+    <inputs>
+      <param name="peaks" argument="-peaks" type="data" format="bed" label="Peaks file" />
+      <param name="ref_feature" argument="-refFeature" type="data" format="bed" label="Reference features in bedformat"/>
+      <param name="peak_threshold" argument="-peakThreshold" type="integer" value="3" label="Peak Threshold"/>
+    </inputs>
+
+    <outputs>
+      <data name="outfile" format="bed" from_work_dir="peaks.bed" />
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="peaks" ftype="bed" value="sample_peaks.bed" />
+            <param name="ref_feature" ftype="bed" value="refFeature.bed"  />
+            <param name="peak_threshold" value="3"/>
+            <output name="outfile" file="calledpeaks1.bed" ftype="bed" />
+        </test>
+        <test>
+            <param name="peaks" ftype="bed" value="zero_peaks.bed" />
+            <param name="ref_feature" ftype="bed" value="refFeature.bed"  />
+            <param name="peak_threshold" value="3"/>
+            <output name="outfile" file="calledpeaks2.bed" ftype="bed" />
+        </test>
+    </tests>
+
+    <help>
+<![CDATA[
+**What it does**
+
+----
+
+It works as a conditional and returns a pre-determined bedfile if the number of peaks called by the peakCaller are less than or equal to the ``peakThreshold`` otherwise returns the peaks that were initially called.
+
+    ``usage: checkCalledPeaks.py [-h] peaks refFeature peakThreshold``
+
+    ``positional arguments:``
+
+    -peaks :   peaks in bedfile format from your peak caller
+
+    -refFeature :   pre-determined bedfile that will be returned when no.of peaks called are less than the threshold
+
+    -peakThreshold :   minimum number of peaks required
+]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None,
+            author = {Kuntala, Prashant Kumar},
+            title = {None},
+            year = {None},
+            eprint = {None},
+            url = {http://www.pughlab.psu.edu/}
+        }</citation>
+    </citations>
+</tool>

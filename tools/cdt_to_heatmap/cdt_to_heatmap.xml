@@ -1,0 +1,104 @@
+<tool id="cdt_to_heatmap" name="CDT to Heatmap" version="1.0.0">
+    <description>for tag pileup data</description>
+    <requirements>
+        <requirement type="package" version="1.9.2">numpy</requirement>
+        <requirement type="package" version="2.2.0">matplotlib</requirement>
+        <requirement type="package" version="2.7.14">python</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+        <![CDATA[
+      python '$__tool_directory__/cdt_to_heatmap.py' -i '$input_file' -o CDT_Heatmap.png
+
+      ## Setting the quantile values properly.
+      #if str($quantile_type.quantile_type_selector) == "b_option":
+        -q '${quantile_type.quantile}'
+      #else if str($quantile_type.quantile_type_selector) == "t_option":
+        -t '${quantile_type.quantile2}'
+      #end if
+
+      -c '$colors' -d '$header' -s '$start_col' -r '$row_num' -l '$col_num' -m '$title' -x '$xlabel' -p '$dpi' -k '$ticks'
+    ]]>
+    </command>
+
+    <inputs>
+        <param name="input_file" argument="-i" type="data" format="tabular" label="Pileup Data Matrix to Plot" />
+        <param name="colors" argument="-c" type="text" value="0,0,0" label="Plot color" help=" enter RGB values separated by comma, example: 192,66,54"/>
+        <param name="header" argument="-d" type="text" value="T" label="Header (T/F)" help="T: First line is header; F: Header is absent"/>
+        <param name="start_col" argument="-s" type="integer" value="2" label="Start Column"/>
+        <param name="col_num" argument="-l" type="integer" value="300" label="Width of the Image"/>
+        <param name="row_num" argument="-r" type="integer" value="600" label="Height of the Image"/>
+        <param name="title" argument="-m" type="text" value="All Features" label="Heatmap Title"/>
+        <param name="xlabel" argument="-x" type="text" value="distance from midpoint (bp)" label="Label under x-axis for the plot "/>
+        <param name="dpi" argument="-p" type="integer" value="100" label="Dots per Inch (dpi) for the Image" help="default: 100, max value: 300"/>
+        <param name="ticks" argument="-k" type="integer" value="100" label="Ticks for the x-axis"/>
+
+        <conditional name="quantile_type">
+            <param name="quantile_type_selector" type="select" display="radio" label="Choose the Contrast paramter">
+                <option value="b_option" selected="true">Quantile</option>
+                <option value="t_option">Absolute Tag Threshold</option>
+            </param>
+
+            <when value="b_option">
+                <param name="quantile" type="float" value="95" label="Quantile" help="can take values between (1 to 100)" argument="-b"/>
+            </when>
+
+            <when value="t_option">
+                <param name="quantile2" type="float" value="0.0" label="Absolute tag threshold" help="can take real values (>=0)" argument="-t"/>
+            </when>
+        </conditional>
+
+    </inputs>
+
+    <outputs>
+        <data name="heatmap_png_output" format="png" from_work_dir="CDT_Heatmap.png" label="Heatmap (png) on ${on_string}"/>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="input_file" value="sample.tabular"/>
+            <param name="header" value="T"/>
+            <param name="colors" value="0,0,0"/>
+            <param name="start_col" value="2"/>
+            <param name="col_num" value="300"/>
+            <param name="row_num" value="600"/>
+            <param name="title" value="All Features"/>
+            <param name="xlabel" value="distance from midpoint (bp)"/>
+            <param name="dpi" value="100"/>
+            <param name="ticks" value="100"/>
+            <conditional name="quantile_type">
+                <param name="quantile_type_selector" value="b_option"/>
+                <param name="quantile" value="95"/>
+            </conditional>
+            <output name="heatmap_png_output" file="CDT_Heatmap_b.png" ftype="png" compare="sim_size"/>
+        </test>
+        <test>
+            <param name="input_file" value="sample.tabular"/>
+            <param name="header" value="T"/>
+            <param name="colors" value="0,0,0"/>
+            <param name="start_col" value="2"/>
+            <param name="col_num" value="300"/>
+            <param name="row_num" value="600"/>
+            <param name="title" value="All Features"/>
+            <param name="xlabel" value="distance from midpoint (bp)"/>
+            <param name="dpi" value="100"/>
+            <param name="ticks" value="100"/>
+            <conditional name="quantile_type">
+                <param name="quantile_type_selector" value="t_option"/>
+                <param name="quantile2" value="10.0"/>
+            </conditional>
+            <output name="heatmap_png_output" file="CDT_Heatmap_t.png" ftype="png" compare="sim_size"/>
+        </test>
+    </tests>
+
+    <help>
+        <![CDATA[
+    **What it does**
+
+    Creates a heatmap from Pileup Data Matrix generated by ``tag_pileup_frequency``.
+    ]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None, author = {Kuntala,Prashant Kumar and Lai, William KM }, title = {None}, year = {None}, eprint = {None}, url = {http://www.pughlab.psu.edu/} }</citation>
+    </citations>
+</tool>

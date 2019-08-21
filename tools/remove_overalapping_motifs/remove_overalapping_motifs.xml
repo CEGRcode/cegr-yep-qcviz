@@ -1,0 +1,42 @@
+<tool id="dedup_fimo" name="Remove Overlapping Motifs" version="1.0.0">
+    <description>from FIMO output motifs</description>
+    <requirements>
+        <requirement type="package" version="2.7.14">python</requirement>
+        <requirement type="package" version="0.22.0">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+        <![CDATA[
+    python '$__tool_directory__/remove_overalapping_motifs.py' '$motif' '$expand_window'
+    ]]>
+    </command>
+
+    <inputs>
+        <param name="motif" type="data" format="bed" label="Motif Bed file"/>
+        <param name="expand_window" type="text" value="100" label="Exclusion Zone" help="motifs in this zone will be compared for p-value"/>
+    </inputs>
+
+    <outputs>
+        <data name="de_dup_fimo" format="bed" from_work_dir="dedupFimo.bed"/>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="motif" ftype="bed" value="motif.bed"/>
+            <param name="expand_window" value="100" />
+            <output name="de_dup_fimo" file="finalOutput.bed" ftype="bed" />
+        </test>
+    </tests>
+
+    <help>
+        <![CDATA[
+**What it does**
+
+Removes the motifs from the FIMO motifs which have overlaps and within exclusion region by choosing the lowest p-value.
+
+]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None, author = {Kuntala, Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {http://www.pughlab.psu.edu/} }</citation>
+    </citations>
+</tool>

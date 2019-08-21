@@ -1,0 +1,60 @@
+<tool id="create_four_color_plot" name="Create Four Color Plot" version="1.0.0">
+    <description>from fasta sequences</description>
+    <requirements>
+        <requirement type="package" version="1.9.2">numpy</requirement>
+        <requirement type="package" version="2.2.0">matplotlib</requirement>
+        <requirement type="package" version="2.7.14">python</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+        <![CDATA[
+      python '$__tool_directory__/create_fourcolor_plot.py' '$input' '$height' '$width' '$dpi' '$xlabel' '$plottitle' 'fourcolorplot.png'
+    ]]>
+    </command>
+
+    <inputs>
+        <param name="input" type="data" format="fasta" label="Fasta Input"/>
+        <param name="height" type="integer" value="700" label="Height of the plot (pixels)"/>
+        <param name="width" type="integer" value="300" label="Width of the plot (pixels)"/>
+        <param name="dpi" type="integer" value="100" label="DPI (dots per inch) for the plot"/>
+        <param name="xlabel" type="text" value="Distance from motif midpoint (bp)" label="Label under the x-axis for the plot"/>
+        <param name="plottitle" type="text" value="" label="Title for the plot"/>
+    </inputs>
+
+    <outputs>
+        <data name="fourcolorplot_image" format="png" from_work_dir="fourcolorplot.png"/>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="input" ftype="fasta" value="foursites.fasta"/>
+            <param name="height" value="700" />
+            <param name="width" value="300" />
+            <param name="dpi"  value="100" />
+            <param name="xlabel" value="Distance from motif midpoint (bp)" />
+            <param name="plottitle" value="FourColor"/>
+            <output name="fourcolorplot_image" file="fourcolorplot.png" ftype="png" compare="sim_size"/>
+        </test>
+        <test>
+            <param name="input" ftype="fasta" value="multiline.fasta"/>
+            <param name="height" value="700" />
+            <param name="width" value="300" />
+            <param name="dpi"  value="100" />
+            <param name="xlabel" value="Distance from motif midpoint (bp)" />
+            <param name="plottitle" value="FourColor"/>
+            <output name="fourcolorplot_image" file="multi.png" ftype="png" compare="sim_size"/>
+        </test>
+    </tests>
+
+    <help>
+        <![CDATA[
+    **What it does**
+
+    Creates a four color plot from the input fasta file.
+    ]]>
+    </help>
+    <citations>
+        <citation type="bibtex">
+            @unpublished{None, author = {Kuntala, Prashant Kumar}, title = {None}, year = {None}, eprint = {None}, url = {http://www.pughlab.psu.edu/} }</citation>
+    </citations>
+
+</tool>
