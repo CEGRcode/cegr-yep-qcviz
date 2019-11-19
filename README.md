@@ -26,7 +26,7 @@ The Yeast Epigenome Project Quality Control &amp; Visualization GALAXY workflow.
 - Meme-suite (http://meme-suite.org/doc/download.html)
 - bedGraphToBigWig and bedToBigBed (http://hgdownload.soe.ucsc.edu/admin/exe/)
 
-_Installing Anaconda usually satisfies all the dependencies for most of the python scripts. pip is used to install bioblend, these scripts are using bioblend version(0.7.0). Make sure you have them installed before you run any of the scripts._
+_Installing Anaconda usually satisfies all the dependencies for most of the python scripts. pip is used to install bioblend, these scripts are using bioblend version(0.13.0). Make sure you have them installed before you run any of the scripts._
 
 > Meme-suite and UCSC utilities are used by downloadResults.py to create required datasets. Make sure these are available in the PATH. Read the entire scripts documentation before running them, dependencies and expected config files are explained in detail.
 

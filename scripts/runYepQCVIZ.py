@@ -164,14 +164,7 @@ def uploadDataToHistories(gi, libs, sampleList):
                 uploadInfo[run][sample].append(upload_data)
 
                 # checking if the dataset is successfully renamed
-                if updateDataset == 200:
-                    print(
-                        "\033[94m  \033[94m  DE-DUP BAM Name Changed to : {} \033[0m \033[0m".format(datasetName))
-                else:
-                    print(
-                        "\033[94m  \033[91m  FAILED TO CHANGE THE DE-DUP BAM Name within the history \033[0m \033[0m")
-                    exit()  # exiting if unable to change the dataset name
-
+                print("\033[94m  \033[94m  DE-DUP BAM Name Changed to : {} \033[0m \033[0m".format(datasetName))
                 print(
                     "\n\033[94m  \033[94m  Uploading GENERIC data for the sample : {} \033[0m \033[0m".format(sample))
 
@@ -213,37 +206,29 @@ def findDeDupBAM(gi, libList, sampleList, libs, hlibs):
     for sampleNo, data in sampleList.items():
         run = data[0]
         folder = sampleNo
-        datasetName = run + "_" + data[1] + "_filtered.bam"
-        sampleHistory = gi.histories.get_histories(
-            history_id=data[2], deleted=False)
-        # checking if only one history is returned
-        if len(sampleHistory) == 1:
-            # iterating through each history
-            hist = gi.histories.show_history(data[2])
-            datasetList = hist['state_ids']['ok']
-            # looping through each dataset to find the BAM file.
-            for i in range(0, len(datasetList)):
-                ds = gi.datasets.show_dataset(datasetList[i])
-                # pprint.pprint([ds['name'],ds['id'],ds['extension']])
-                if ds['name'].startswith('Filter') and ds['extension'] == 'bam':
-                    print(
-                        "\033[94m  \033[94m  FOUND BAM file: {} \033[0m \033[0m".format(ds['name']))
-                    dataset = gi.libraries.copy_from_dataset(
-                        library_id=libs[run][0], dataset_id=ds['id'], folder_id=libs[run][1][folder][0])
-                    print(
-                        "\033[94m  \033[94m  Finished Copying De-Dup BAM file into the data library : {}, {} \n \033[0m \033[0m".format(run, folder))
+        datasetName = run+"_"+data[1]+"_filtered.bam"
 
-                    # append the uploaded dataset id for each sample to upload into history.
-                    libs[run][1][folder].append(dataset['id'])
-        else:
-            print("There is more than one Histories for this sample. Skipping\n {}\t{}\t{}".format(
-                sampleNo, data, sampleHistory[0]['name']))
-            continue
+        # iterating through each history
+        hist = gi.histories.show_history(data[2])
+        datasetList = hist['state_ids']['ok']
+        
+        # looping through each dataset to find the BAM file.
+        for i in range(0,len(datasetList)):
+            ds = gi.datasets.show_dataset(datasetList[i])
+            # pprint.pprint([ds['name'],ds['id'],ds['extension']])
+            if ds['name'].startswith('Filter') and ds['extension'] == 'bam':
+                print "\033[94m  \033[94m  FOUND BAM file: {} \033[0m \033[0m".format(ds['name'])
+                dataset = gi.libraries.copy_from_dataset(library_id=libs[run][0], dataset_id=ds['id'],folder_id=libs[run][1][folder][0])
+                print "\033[94m  \033[94m  Finished Copying De-Dup BAM file into the data library : {}, {} \n \033[0m \033[0m".format(run,folder)
 
-    # DEBUG
+                # append the uploaded dataset id for each sample to upload into history.
+                libs[run][1][folder].append(dataset['id'])
+                break
+
+    ##DEBUG
     # pprint.pprint(libs)
     # pprint.pprint(hlibs)
-    return libs, hlibs
+    return libs,hlibs
 
 
 def getInputsAndParams(gi, uploadInfo, libs, workflowID, confInputs, confParams, sampleList):
