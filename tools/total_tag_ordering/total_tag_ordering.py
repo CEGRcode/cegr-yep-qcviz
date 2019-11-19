@@ -1,7 +1,7 @@
 #!/usr/bin/python
+import argparse
 
 import pandas as pd
-import argparse
 
 """
 Program to sort the tagpileup heatmap frequencies based on totalTagCount

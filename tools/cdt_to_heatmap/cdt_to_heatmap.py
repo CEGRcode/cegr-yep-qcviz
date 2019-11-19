@@ -1,12 +1,14 @@
 #!/usr/bin/python
+import getopt
 import math
 import sys
-import getopt
+
+import matplotlib
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator
+
 import numpy as np
-import matplotlib
 matplotlib.use('Agg')
 
 """
@@ -103,7 +105,8 @@ def plot_heatmap(data01, c, out_file_name, upper_lim, lower_lim, row_num, col_nu
     ax.xaxis.set_minor_locator(AutoMinorLocator(2))
     ax.tick_params(which='major', length=10, width=2, color='black')
     ax.tick_params(which='minor', length=6, width=2, color='black')
-    print "\n DEBUG INFO \n locs : {} \n length_locs : {} \n labels : {} \n length_labels:{}\n".format(locs, len(locs), labels, len(labels))
+    print "\n DEBUG INFO \n locs : {} \n length_locs : {} \n labels : {} \n length_labels:{}\n".format(
+        locs, len(locs), labels, len(labels))
 
     plt.yticks([])
     plt.xlabel(xlabel, fontsize=14)

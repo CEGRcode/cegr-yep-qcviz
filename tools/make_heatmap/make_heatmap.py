@@ -1,13 +1,17 @@
 #!/usr/bin/python
 from __future__ import division
-import pprint
+
 import argparse
 import math
-import numpy as np
+import pprint
+
+import matplotlib
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 from matplotlib.ticker import (AutoMinorLocator, MultipleLocator)
-import matplotlib
+
+import numpy as np
+
 matplotlib.use('Agg')
 
 """
@@ -112,7 +116,8 @@ def plot_heatmap(data01, c, out_file_name, upper_lim, lower_lim, row_num, col_nu
     # Draw a horizontal line through the midpoint.
     plt.axvline(color='black', linestyle='--', x=locs[mid], linewidth=2)
 
-    print "\n DEBUG INFO \n locs : {} \n length_locs : {} \n labels : {} \n length_labels:{}\n".format(locs, len(locs), labels, len(labels))
+    print "\n DEBUG INFO \n locs : {} \n length_locs : {} \n labels : {} \n length_labels:{}\n".format(
+        locs, len(locs), labels, len(labels))
 
     plt.yticks([])
     plt.xlabel(xlabel, fontsize=14)
@@ -175,7 +180,8 @@ def plot_colorbar(data01, c, out_file_name, row_num, col_num, categories):
     unbpos = int(unbheight / 2 + topunb)
 
     # positions for the values
-    print "rp: {}, stm: {}, ess : {}, cof : {}, unb : {}, trna : {}".format(rppos, stmpos, srgpos, cycpos, cofpos, unbpos)
+    print "rp: {}, stm: {}, ess : {}, cof : {}, unb : {}, trna : {}".format(
+        rppos, stmpos, srgpos, cycpos, cofpos, unbpos)
 
     # The default transform specifies that text is in data co-ordinates, that is even though the
     # image is compressed , the point are plotted based on datapoint in (x,y) like a graph

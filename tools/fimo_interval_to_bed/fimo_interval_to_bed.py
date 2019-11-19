@@ -34,9 +34,11 @@ chr2	36503	36527	2	22.9239	+
 
 """
 from __future__ import division
-import pandas as pd
+
 import argparse
 import os
+
+import pandas as pd
 
 
 def processText(fimoFile):

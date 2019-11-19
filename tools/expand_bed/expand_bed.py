@@ -1,8 +1,9 @@
 #!/usr/bin/python
-
 from __future__ import division
-import pandas as pd
+
 import argparse
+
+import pandas as pd
 
 """
 Program to expand the bed file based on user input.

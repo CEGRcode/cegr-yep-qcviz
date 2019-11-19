@@ -5,9 +5,11 @@ This script first finds the distance between each peak and bound features, to fi
 """
 
 from __future__ import division
-import pandas as pd
+
 import argparse
 import pprint
+
+import pandas as pd
 
 
 def getMidPoints(peakfile, refFeature):

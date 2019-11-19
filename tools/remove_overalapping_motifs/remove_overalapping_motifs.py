@@ -1,7 +1,10 @@
 #!/usr/bin/python
 from __future__ import division
-import pandas as pd
+
 import argparse
+
+import pandas as pd
+
 # import pprint
 
 
@@ -22,7 +25,8 @@ def removeRepeats(dataFrame):
             # print mdp[j]
 
             if len(chrData.index[chrData['midpoint'] == mdp[j]].tolist()) > 1:
-                print "Found Same Midpoints : {} {}".format(mdp[j], len(chrData.index[chrData['midpoint'] == mdp[j]].tolist()))
+                print "Found Same Midpoints : {} {}".format(mdp[j], len(
+                    chrData.index[chrData['midpoint'] == mdp[j]].tolist()))
                 # print len(chrData.index[chrData['midpoint'] == mdp[j]].tolist())
                 first = chrData.index[chrData['midpoint'] == mdp[j]].tolist()[
                     0]
@@ -39,7 +43,8 @@ def removeRepeats(dataFrame):
                     # print "ELSE pv1: {}, pv2 :{}".format(pv1,pv2)
                     excludeList.append(first)
 
-    print "\nRemoved in Repeats : {} ,\nindex : {}\n".format(len(excludeList), excludeList)
+    print "\nRemoved in Repeats : {} ,\nindex : {}\n".format(
+        len(excludeList), excludeList)
     dataFrame = dataFrame.drop(excludeList)
     # print dataFrame
     return dataFrame
@@ -112,7 +117,8 @@ def removeRegions(dataFrame, er):
                             excludeList.append(index1)
             # else:
                 # print "IN EXCLUDE LIST : {}".format(index1)
-    print "\nRemoved : {} ,\nindex : {}\n".format(len(excludeList), excludeList)
+    print "\nRemoved : {} ,\nindex : {}\n".format(
+        len(excludeList), excludeList)
     sortedData = sortedData.drop(excludeList)
     sortedData = sortedData.sort_values(by=['#chr', 'rank'], kind='mergesort')
     # print sortedData

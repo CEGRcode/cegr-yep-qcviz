@@ -1,11 +1,13 @@
 #!/usr/bin/python
-from matplotlib.ticker import MultipleLocator
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
-import numpy as np
-import matplotlib
 import argparse
 import sys
+
+import matplotlib
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
+
+import numpy as np
 matplotlib.use('Agg')
 
 

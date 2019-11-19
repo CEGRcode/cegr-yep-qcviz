@@ -1,9 +1,11 @@
 #!/usr/bin/python
 
 from __future__ import division
-import pandas as pd
+
 import argparse
 import pprint
+
+import pandas as pd
 
 """
 Program to make the Motif heatmaps.

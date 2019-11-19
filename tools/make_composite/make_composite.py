@@ -1,12 +1,17 @@
 #!/usr/bin/python
 from __future__ import division
-import math
-import scipy
+
 import argparse
+import math
 import sys
-import pandas as pd
-import matplotlib.pyplot as plt
+
 import matplotlib
+import matplotlib.pyplot as plt
+
+import pandas as pd
+
+import scipy
+
 matplotlib.use('Agg')
 
 """

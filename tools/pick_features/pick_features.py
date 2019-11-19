@@ -10,9 +10,11 @@ https://erikrood.com/Python_References/rows_cols_python.html
 
 """
 from __future__ import division
-import pandas as pd
+
 import argparse
 import pprint
+
+import pandas as pd
 
 
 def pickRegions(bedfile, reference, sectorThreshold):

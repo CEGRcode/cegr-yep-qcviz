@@ -1,13 +1,18 @@
 #!/usr/bin/python
 from __future__ import division
-import scipy
+
 import argparse
-import sys
 import math
-import pandas as pd
+import sys
+
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import NullFormatter
-import matplotlib
+
+import pandas as pd
+
+import scipy
+
 matplotlib.use('Agg')
 
 """

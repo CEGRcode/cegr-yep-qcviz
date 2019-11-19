@@ -6,9 +6,11 @@ Removes 2-micron if present
 Expands the peaks to certain bp if needed (for better browser visualization)
 """
 from __future__ import division
-from collections import OrderedDict
-import pandas as pd
+
 import argparse
+from collections import OrderedDict
+
+import pandas as pd
 
 
 def write_roman(num):

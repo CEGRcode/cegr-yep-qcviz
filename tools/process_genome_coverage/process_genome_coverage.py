@@ -16,9 +16,10 @@ To create the bedgraph style output, you can do stand specific, fragment size an
 
 """
 
-from collections import OrderedDict
-import pandas as pd
 import argparse
+from collections import OrderedDict
+
+import pandas as pd
 
 
 def write_roman(num):
