@@ -30,6 +30,10 @@ _Installing Anaconda usually satisfies all the dependencies for most of the pyth
 
 > Meme-suite and UCSC utilities are used by downloadResults.py to create required datasets. Make sure these are available in the PATH. Read the entire scripts documentation before running them, dependencies and expected config files are explained in detail.
 
+<p align="center">
+  <img src="./examples/images/yepQcViz_flowchart.png" width="550" alt="YEP flowchart">
+</p>
+
 ## Scripts Documentation
 
 - `generateYepRunInfoFromPEGR.py` creates the `yepRunInfo.csv` file by using PEGR API for FRANCLINE. It takes the `runNO` as input to generate the run info file. you can use `#` to comment any sample in the run info file. The commented samples will not be processed by the workflow. Currently the script screens for `sacCer3_cegr` before making the run info file.
