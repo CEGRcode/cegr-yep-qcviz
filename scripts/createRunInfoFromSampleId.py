@@ -42,13 +42,13 @@ def fetchSampleData(apiKey,query):
     # Oxidative stress related alias on PEGR
     OXList = ['H2O2_180min','H2O2_6min','OX','H2O2_30min']
 
-    print " \033[94m  \033[94m INFO : \n{} \033[0m \033[0m ".format(results['message'])
+    print(" \033[94m  \033[94m INFO : \n{} \033[0m \033[0m ".format(results['message']))
     # pprint.pprint(results['data'])
 
     for sample in results['data']:
 
         # #DEBUG
-        # print " runNO: {} sample ID: {} target:{} history_id: {}".format(sample['experiments'][0]['runId'],sample['id'],sample['target'],sample['histories'][0])
+        # print(" runNO: {} sample ID: {} target:{} history_id: {}".format(sample['experiments'][0]['runId'],sample['id'],sample['target'],sample['histories'][0]))
         # pprint.pprint(sample['experiments'][0]['alignments'][0]['genome'])
 
         # retrieve only the YEP project sample histories.
@@ -56,7 +56,7 @@ def fetchSampleData(apiKey,query):
             # yepSampleCount = yepSampleCount + 1
 
             # DEBUG
-            print "{}:{}\n".format(sample['id'],sample['treatments'])
+            print("{}:{}\n".format(sample['id'],sample['treatments']))
 
             # set the masterNoTag (control_bam) based on the treatment infomation
             if sample['treatments'] in HSList:
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     # This is the cegr@psu.edu service accounts original APIkey for PEGR.
     API_KEY=''
 
-    print "\n \033[94m  \033[95m Making the API CALL to FRANCLINE per sample !  \033[0m \033[0m "
+    print("\n \033[94m  \033[95m Making the API CALL to FRANCLINE per sample !  \033[0m \033[0m ")
     for sampleId in samples:
         # parameter dictionary for the fetchSampleData
         query = {"userEmail": "cegr@psu.edu","id":sampleId,"preferredOnly": "true"}
@@ -92,11 +92,11 @@ if __name__ == '__main__':
     outfile = open("yepqcRunInfo.csv",'w')
     header = "#RUN,SAMPLE,TARGET,HISTORYID,NOTAG,GENOME,TREATMENT\n"
     outfile.write(header)
-    print " \033[94m  \033[94m Creating the yepQcViz run info file ! \033[0m \033[0m "
+    print(" \033[94m  \033[94m Creating the yepQcViz run info file ! \033[0m \033[0m ")
     for line in runInfoContent:
         outfile.write(line)
     outfile.flush()
     outfile.close()
 
-    print "\n \033[94m  \033[95m Run Info File has {} yeast samples !  \033[0m \033[0m ".format(len(runInfoContent))
-    print " \033[94m  \033[95m DONE !  \033[0m \033[0m "
+    print("\n \033[94m  \033[95m Run Info File has {} yeast samples !  \033[0m \033[0m ".format(len(runInfoContent)))
+    print(" \033[94m  \033[95m DONE !  \033[0m \033[0m ")

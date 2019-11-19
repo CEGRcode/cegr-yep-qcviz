@@ -30,21 +30,21 @@ def fetchSequenceRunData(apiKey,query,outfilename):
     """
     function to make the api request to francline
     """
-    print "\n \033[94m  \033[95m Making the API CALL to FRANCLINE !  \033[0m \033[0m "
+    print("\n \033[94m  \033[95m Making the API CALL to FRANCLINE !  \033[0m \033[0m ")
     url = "http://francline.vmhost.psu.edu:8080/pegr/api/fetchSequenceRunData?apiKey="+apiKey
     r = requests.post(url, json=query)
     results = r.json()
     # pprint.pprint(len(results['data']))
 
-    print " \033[94m  \033[94m INFO : {} \033[0m \033[0m ".format(results['message'])
-    print " \033[94m  \033[94m Total no of samples : {} \033[0m \033[0m ".format(len(results['data']))
+    print(" \033[94m  \033[94m INFO : {} \033[0m \033[0m ".format(results['message']))
+    print(" \033[94m  \033[94m Total no of samples : {} \033[0m \033[0m ".format(len(results['data'])))
     # pprint.pprint(results['data'])
 
     # parsing the results to create a csv file
     outfile = open(outfilename,'w')
     header = "#RUN,SAMPLE,TARGET,HISTORYID,NOTAG,GENOME\n"
     outfile.write(header)
-    print " \033[94m  \033[94m Creating the yepQcViz run info file ! \033[0m \033[0m "
+    print(" \033[94m  \033[94m Creating the yepQcViz run info file ! \033[0m \033[0m ")
     yepSampleCount = 0
     for sample in results['data']:
 
@@ -58,8 +58,8 @@ def fetchSequenceRunData(apiKey,query,outfilename):
             outfile.write("{},{},{},{},{},{}\n".format(sample['experiments'][0]['runId'],sample['id'],sample['target'],sample['histories'][0],'masterNoTags_29_sorted_dedup.bam',sample['experiments'][0]['alignments'][0]['genome']))
     outfile.flush()
     outfile.close()
-    print "\n \033[94m  \033[95m Run Info File has {} yeast samples !  \033[0m \033[0m ".format(yepSampleCount)
-    print " \033[94m  \033[95m DONE !  \033[0m \033[0m "
+    print("\n \033[94m  \033[95m Run Info File has {} yeast samples !  \033[0m \033[0m ".format(yepSampleCount))
+    print(" \033[94m  \033[95m DONE !  \033[0m \033[0m ")
 
 if __name__ == '__main__':
 
