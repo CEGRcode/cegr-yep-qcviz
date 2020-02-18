@@ -11,7 +11,7 @@ from matplotlib.ticker import NullFormatter
 
 import pandas as pd
 
-import scipy
+import numpy
 
 matplotlib.use('Agg')
 
@@ -28,7 +28,7 @@ args = parser.parse_args()
 try:
     signalData = pd.read_csv(args.sample, sep='\t', index_col=0)
 except IOError:
-    print "\nUnable to OPEN input files !\n"
+    print("\nUnable to OPEN input files !\n")
     parser.print_help()
     sys.exit()
 
@@ -41,8 +41,8 @@ stop_col = 2000 + 500
 signalData = signalData.round(decimals=3)
 
 # General DEBUG
-print signalData.index
-print signalData.shape
+print(signalData.index)
+print(signalData.shape)
 
 # retrieve the row index from the dataframe
 rowIndex = list(signalData.index)
@@ -52,7 +52,7 @@ sx = list(signalData.loc[rowIndex[0]])
 
 # retrieve values for y axis and convert them to float
 sy = list(signalData.columns)
-sy = map(float, sy)
+sy = list(map(float, sy))
 
 # prepare PlotData for antisense strand
 cx = list(signalData.loc[rowIndex[1]])
@@ -66,8 +66,8 @@ fig, ax = plt.subplots()
 plt.plot(sy, sx, 'b', sy, x1, 'r')  # plotting the graph
 
 # adding the fill color for both the strands.
-d = scipy.zeros(len(sx))
-d1 = scipy.zeros(len(sx))
+d = numpy.zeros(len(sx))
+d1 = numpy.zeros(len(sx))
 plt.fill_between(sy, sx, where=sx >= d, interpolate=False, color="blue")
 plt.fill_between(sy, x1, where=sx >= d1, interpolate=False, color="red")
 
@@ -139,4 +139,4 @@ plt.margins(0.01)
 
 # saving the image at 300dpi , web standard for printing images.
 plt.savefig('motifcomposite_sense_antisense.png',
-            frameon=False, dpi=int(args.dpi), pad_inches=0)
+            facecolor=None, dpi=int(args.dpi), pad_inches=0)

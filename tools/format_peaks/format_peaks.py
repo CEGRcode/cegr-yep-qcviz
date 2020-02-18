@@ -100,5 +100,5 @@ if __name__ == '__main__':
                     header.append(line)
 
     data = pd.DataFrame(filecontents)
-    print data[0:10]
+    print(data[0:10])
     data.to_csv('formatedPeaks.bed', sep='\t', header=False, index=False)

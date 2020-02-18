@@ -92,7 +92,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     pprint.pprint(args)
+    # example command : python make_motif_heatmap.py sense.tabular test-data/sense.tabular antisense.tabular test-data/antisense.tabular
 
-    print "First Category : {}".format(args.firstCatergory)
-    print "Second Category : {}".format(args.secondCatergory)
+    print("First Category : {}".format(args.firstCatergory))
+    print("Second Category : {}".format(args.secondCatergory))
     sortData(args.sense, args.antisense)

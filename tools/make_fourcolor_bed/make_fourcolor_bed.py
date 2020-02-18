@@ -23,7 +23,7 @@ if __name__ == '__main__':
         if str(temp[3]) not in dataDict.keys():
             dataDict[str(temp[3])] = line
         else:
-            print " Skipping : {}".format(line)
+            print(" Skipping : {}".format(line))
 
     # reading the rankOrder
     rankOrder = open(args.totalTagRankOrder, 'r').readlines()[

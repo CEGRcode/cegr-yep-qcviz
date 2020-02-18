@@ -50,9 +50,9 @@ def findDistance(peaks, features, feat):
     """
     Function to find the distance between Features and peaks
     """
-    print "No of Bound Features : "
+    print("No of Bound Features : ")
     pprint.pprint(len(features))
-    print "No of PEAKS : "
+    print("No of PEAKS : ")
     pprint.pprint(len(peaks))
 
     # calculating the distance between each region, using strand information also
@@ -114,7 +114,7 @@ def findDistance(peaks, features, feat):
             idDict[k] = -value
 
     # pprint.pprint(idDict[0:5])
-    print " No of regions after choosing the smallest absolute distance : "
+    print(" No of regions after choosing the smallest absolute distance : ")
     pprint.pprint(len(idDict.keys()))
     # pprint.pprint(len(abdIdDict.keys()))
     # pprint.pprint(idDict)
@@ -127,8 +127,8 @@ def findDistance(peaks, features, feat):
     sdata = pd.DataFrame(iddata.sort_values(
         by='distance', ascending=True, na_position='first'))
     # print sdata[0:10]
-    print " Snapshot of the data : "
-    print sdata
+    print(" Snapshot of the data : ")
+    print(sdata)
 
     # to store the bedfile regions to create the final sorted bedfile.
     featureDict = {}
@@ -148,7 +148,7 @@ def findDistance(peaks, features, feat):
         if value in featureDict.keys():
             outfile.write(featureDict[value])
         else:
-            print "NOT FOUND :{}".format(row['id'])
+            print("NOT FOUND :{}".format(row['id']))
     outfile.flush()
     outfile.close()
 
@@ -170,7 +170,7 @@ if __name__ == '__main__':
     refData = open(args.refFeature, 'r').readlines()
 
     if len(boundData) == len(refData):
-        print "Bound Features are EQUAL to the REFERENCE FEATURE, returning the REFERENCE BED to plot"
+        print("Bound Features are EQUAL to the REFERENCE FEATURE, returning the REFERENCE BED to plot")
         # creating the final bedfile to make the heatmap
         outfile = open("finalDist.bed", 'w')
         for line in refData:
@@ -178,7 +178,7 @@ if __name__ == '__main__':
         outfile.flush()
         outfile.close()
     elif len(boundData) <= int(args.sectorThreshold):
-        print "Bound Features are LESS than or EQUAL to the SECTOR THRESHOLD, returning the REFERENCE BED to plot"
+        print("Bound Features are LESS than or EQUAL to the SECTOR THRESHOLD, returning the REFERENCE BED to plot")
         # creating the final bedfile to make the heatmap
         outfile = open("finalDist.bed", 'w')
         for line in refData:
@@ -186,7 +186,7 @@ if __name__ == '__main__':
         outfile.flush()
         outfile.close()
     else:
-        print "Bound Features are Less than the REFERENCE FEATUREs, calculating the distance "
+        print("Bound Features are Less than the REFERENCE FEATUREs, calculating the distance ")
         # retrieve the mid points before calculating distances.
         [peaks, features] = getMidPoints(args.peakFile, args.boundFeatures)
         # calculate distance and create the final file

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 
-import scipy
+import numpy
 
 matplotlib.use('Agg')
 
@@ -59,19 +59,19 @@ try:
     signalData = pd.read_csv(args.sampleData, sep='\t', index_col=0)
     controlData = pd.read_csv(args.controlData, sep='\t', index_col=0)
 except IOError:
-    print "\nUnable to OPEN input files !\n"
+    print("\nUnable to OPEN input files !\n")
     parser.print_help()
     sys.exit()
 
-print "signalData shape : {}".format(signalData.shape)
-print "controlData shape : {}".format(controlData.shape)
+print("signalData shape : {}".format(signalData.shape))
+print("controlData shape : {}".format(controlData.shape))
 
 # prepare PlotData for sample
 signalData = signalData.round(decimals=3)
 
 # Calculating the peak value index with respect to origin.
 mPeak = findRelativeMaxPoint(signalData)
-print mPeak
+print(mPeak)
 
 # retrieve the row index from the dataframe
 rowIndex = list(signalData.index)
@@ -81,7 +81,7 @@ sx = list(signalData.loc[rowIndex[0]])
 
 # retrieve values for y axis and convert them to float
 sy = list(signalData.columns)
-sy = map(float, sy)
+sy = list(map(float, sy))
 
 
 # retrieve the row index from the controlData dataframe
@@ -92,7 +92,7 @@ cx = list(controlData.loc[rowIndex[0]])
 
 # retrieve values for y axis and convert them to float
 cy = list(controlData.columns)
-cy = map(float, cy)
+cy = list(map(float, cy))
 
 
 # setting the font
@@ -105,7 +105,7 @@ fig, ax = plt.subplots()
 plt.plot(sy, sx, color="#" + args.signalColor, label="Signal")
 
 # adding the background color
-d = scipy.zeros(len(sx))
+d = numpy.zeros(len(sx))
 plt.fill_between(sy, sx, where=sx >= d, interpolate=False,
                  color="#" + args.backgroundColor)
 
@@ -158,5 +158,5 @@ plt.setp(ax.spines.values(), linewidth=2)
 plt.margins(0)
 plt.tick_params(length=8, width=2)
 
-plt.savefig('Composite_plot.png', frameon=False, dpi=int(
+plt.savefig('Composite_plot.png', facecolor=None, dpi=int(
     args.dpi), pad_inches=0.05, bbox_inches='tight')

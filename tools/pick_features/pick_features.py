@@ -48,15 +48,15 @@ def pickRegions(bedfile, reference, sectorThreshold):
 
     # retrieve bound features
     boundFeatures = refData.loc[refData['Rank_Order'].isin(bound.r1.unique())]
-    print boundFeatures[0:10]
+    print(boundFeatures[0:10])
     pprint.pprint(len(boundFeatures))
-    print "\n"
+    print("\n")
 
     # checking if there are any boundFeatures
     if len(boundFeatures) > int(sectorThreshold):
         # creating the boundSectors bedfile
         bfFile = open("boundFeatures.bed", 'w')
-        print " Creating the boundFeatures file ! "
+        print(" Creating the boundFeatures file ! ")
         for index, row in boundFeatures.iterrows():
             # print "{}\t{}\t{}\t{}\t{}\t{}".format(row['chrom'],row['str'],row['stp'],row['Rank_Order'],row['category'],row['strand'])
             bfFile.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(
@@ -66,7 +66,7 @@ def pickRegions(bedfile, reference, sectorThreshold):
     else:
         # returning the reference bedfile, since there are zero bound features
         bfFile = open("boundFeatures.bed", 'w')
-        print " Zero bound features found or features less than required threshold , returning Reference feature file ! "
+        print(" Zero bound features found or features less than required threshold , returning Reference feature file ! ")
         for index, row in refData.iterrows():
             # print "{}\t{}\t{}\t{}\t{}\t{}".format(row['chrom'],row['str'],row['stp'],row['Rank_Order'],row['category'],row['strand'])
             bfFile.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(

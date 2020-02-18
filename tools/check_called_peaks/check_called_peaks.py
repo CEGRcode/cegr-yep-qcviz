@@ -30,12 +30,12 @@ if __name__ == '__main__':
 
     # checking the threshold for peaks
     if len(peakList) <= args.peakThreshold or peakList[0] == '\n' or len(peakList) == 0:
-        print " The number of peaks found : {} is less or equal to the requested peakThreshold : {} \n Returning the pre-determined bedfile".format(len(peakList), args.peakThreshold)
+        print(" The number of peaks found : {}  <= to the requested peakThreshold of {} \n Returning the pre-determined bedfile".format(len(peakList), args.peakThreshold))
 
         if len(peakList) <= 10:
-            print "\n INPUT PEAK FILE CONTAINS !\n"
+            print("\n INPUT PEAK FILE CONTAINS !\n")
             for line in openfile:
-                print line
+                print(line.strip())
 
         # creating the pre-determined bedfile
         ffeatures = open(args.refFeature, 'r').readlines()
@@ -48,7 +48,7 @@ if __name__ == '__main__':
         # returning the "called" peak file
         outfile = open("peaks.bed", 'w')
 
-        print " Creating the bedfile for 'calledPeaks'  !"
+        print(" Creating the bedfile for 'calledPeaks'  !")
         for line in peakList:
             outfile.write(line)
         outfile.flush()

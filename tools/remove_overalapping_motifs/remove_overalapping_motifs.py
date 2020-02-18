@@ -25,8 +25,8 @@ def removeRepeats(dataFrame):
             # print mdp[j]
 
             if len(chrData.index[chrData['midpoint'] == mdp[j]].tolist()) > 1:
-                print "Found Same Midpoints : {} {}".format(mdp[j], len(
-                    chrData.index[chrData['midpoint'] == mdp[j]].tolist()))
+                print("Found Same Midpoints : {} {}".format(mdp[j], len(
+                    chrData.index[chrData['midpoint'] == mdp[j]].tolist())))
                 # print len(chrData.index[chrData['midpoint'] == mdp[j]].tolist())
                 first = chrData.index[chrData['midpoint'] == mdp[j]].tolist()[
                     0]
@@ -43,8 +43,8 @@ def removeRepeats(dataFrame):
                     # print "ELSE pv1: {}, pv2 :{}".format(pv1,pv2)
                     excludeList.append(first)
 
-    print "\nRemoved in Repeats : {} ,\nindex : {}\n".format(
-        len(excludeList), excludeList)
+    print("\nRemoved in Repeats : {} ,\nindex : {}\n".format(
+        len(excludeList), excludeList))
     dataFrame = dataFrame.drop(excludeList)
     # print dataFrame
     return dataFrame
@@ -80,7 +80,7 @@ def removeRegions(dataFrame, er):
         # print chrData[0:3]
         mdp = chrData['midpoint'].tolist()
         # pprint.pprint(mdp)
-        print "processing chromosome : {} ".format(i)
+        print("processing chromosome : {} ".format(i))
 
         # iterating through each motif to pick the least p-value
         for j in range(0, len(mdp)):
@@ -110,20 +110,22 @@ def removeRegions(dataFrame, er):
 
                         # excluding the greater p-value after comparison
                         if pv1 <= pv2:
-                            # print " IF pv1: {}, pv2 :{}".format(pv1,pv2)
+                            # pprint.pprint(" IF pv1: {}, pv2 :{}".format(pv1,pv2))
                             excludeList.append(index2)
+                            # pprint.pprint(list(chrData.loc[index2]))
                         else:
-                            # print "ELSE pv1: {}, pv2 :{}".format(pv1,pv2)
+                            # pprint.pprint("ELSE pv1: {}, pv2 :{}".format(pv1,pv2))
                             excludeList.append(index1)
+                            # pprint.pprint(list(chrData.loc[index1]))
             # else:
                 # print "IN EXCLUDE LIST : {}".format(index1)
-    print "\nRemoved : {} ,\nindex : {}\n".format(
-        len(excludeList), excludeList)
-    sortedData = sortedData.drop(excludeList)
-    sortedData = sortedData.sort_values(by=['#chr', 'rank'], kind='mergesort')
+    print("\nRemoved : {} ,\nindex : {}\n".format(
+        len(excludeList), excludeList))
+    sData = sortedData.drop(excludeList)
+    sortedData = sData.sort_values(by=['#chr', 'rank'], kind='mergesort')
     # print sortedData
     sortedData = sortedData.drop(['midpoint'], axis=1)
-    print "Final Shape of the data : {}".format(sortedData.shape)
+    print("Final Shape of the data : {}".format(sortedData.shape))
     sortedData.to_csv('dedupFimo.bed', sep='\t', header=False, index=False)
     # return excludeList
 
@@ -141,5 +143,5 @@ if __name__ == '__main__':
                         '#chr', 'start', 'end', 'rank', 'p-value', 'strand'])
 
     Fdata = Fdata.sort_values(by=['#chr', 'p-value'], kind='mergesort')
-    print "Motif data Shape : {}".format(Fdata.shape)
+    print("Motif data Shape : {}".format(Fdata.shape))
     removeRegions(Fdata, int(args.excludeWindow))

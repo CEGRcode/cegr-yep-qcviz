@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
     # checking if the first line startswith '>chr'
     if openfile[0].startswith('>') is False:
-        print "Invalid fasta file ! \nsequences header is missing .. need to start with '>chr'\nRequires standard fasta file"
+        print("Invalid fasta file ! \nsequences header is missing .. need to start with '>chr'\nRequires standard fasta file")
         sys.exit()
 
     # reading each line
@@ -141,8 +141,8 @@ if __name__ == '__main__':
 
     plotData = np.array(data, dtype=int)
 
-    print "\nprocessed sequences: {}\n".format(sequences.keys())
-    print "plotData : \n{}".format(plotData)
+    print("\nprocessed sequences: {}\n".format(sequences.keys()))
+    print("plotData : \n{}".format(plotData))
 
     # creating the four Color with proper dimensions
     plotFourColor(plotData, hasN, int(args.height), int(args.width), int(

@@ -64,7 +64,7 @@ def rebin(a, new_shape):
     M, N = a.shape
 
     # compare the heatmap matrix
-    a_compress = a.reshape((m, M / m, n, N / n)).mean(3).mean(1)
+    a_compress = a.reshape((m, int(M / m), n, int(N / n))).mean(3).mean(1)
     return np.array(a_compress)
 
 
@@ -105,8 +105,8 @@ def plot_heatmap(data01, c, out_file_name, upper_lim, lower_lim, row_num, col_nu
     ax.xaxis.set_minor_locator(AutoMinorLocator(2))
     ax.tick_params(which='major', length=10, width=2, color='black')
     ax.tick_params(which='minor', length=6, width=2, color='black')
-    print "\n DEBUG INFO \n locs : {} \n length_locs : {} \n labels : {} \n length_labels:{}\n".format(
-        locs, len(locs), labels, len(labels))
+    print("\n DEBUG INFO \n locs : {} \n length_locs : {} \n labels : {} \n length_labels:{}\n".format(
+        locs, len(locs), labels, len(labels)))
 
     plt.yticks([])
     plt.xlabel(xlabel, fontsize=14)
@@ -119,7 +119,7 @@ def plot_heatmap(data01, c, out_file_name, upper_lim, lower_lim, row_num, col_nu
 
     # saving the figure
     plt.savefig(out_file_name, bbox_inches='tight',
-                pad_inches=0.05, dpi=ddpi, frameon=False)
+                pad_inches=0.05, dpi=ddpi, facecolor=None)
 
 
 def load_Data(input_file, out_file, quantile, absolute, color, header, start_col, row_num, col_num, heatmapTitle, xlabel, ddpi, ticks):
@@ -138,7 +138,7 @@ def load_Data(input_file, out_file, quantile, absolute, color, header, start_col
         # data.close()
     data0 = np.array(data0, dtype=float)
 
-    print "# sites: ", sites
+    print("# sites: ", sites)
 
     if row_num == -999:
         row_num = data0.shape[0]
@@ -169,11 +169,11 @@ def load_Data(input_file, out_file, quantile, absolute, color, header, start_col
     # in cases the 95th percentile contrast is <= user defined min_upper_lim
     min_upper_lim = 5.0
     if quantile != 90.0:
-        print "\nQUANTILE: {}".format(quantile)
-        print "Quantile calculated UPPER LIM: {}".format(upper_lim)
-        print "LOWER LIM: {}".format(lower_lim)
+        print("\nQUANTILE: {}".format(quantile))
+        print("Quantile calculated UPPER LIM: {}".format(upper_lim))
+        print("LOWER LIM: {}".format(lower_lim))
         if upper_lim <= min_upper_lim:
-            print "setting heatmap upper_threshold to min_upper_lim\n"
+            print("setting heatmap upper_threshold to min_upper_lim\n")
             upper_lim = min_upper_lim
 
     print('heatmap upper threshold: ' + str(upper_lim))
@@ -257,21 +257,21 @@ if __name__ == '__main__':
         elif opt[0] == "-k":
             ticks = opt[1]
 
-    print "Header present:", header
-    print "Start column:", start_col
-    print "Row number (pixels):", row_num
-    print "Col number (pixels):", col_num
-    print "heatmapTitle:", heatmapTitle
-    print "xlabel:", xlabel
-    print "dpi:", ddpi
-    print "ticks:", ticks
+    print("Header present:", header)
+    print("Start column:", start_col)
+    print("Row number (pixels):", row_num)
+    print("Col number (pixels):", col_num)
+    print("heatmapTitle:", heatmapTitle)
+    print("xlabel:", xlabel)
+    print("dpi:", ddpi)
+    print("ticks:", ticks)
     if absolute != -999:
-        print "Absolute tag contrast threshold:", absolute
+        print("Absolute tag contrast threshold:", absolute)
     else:
-        print "Percentile tag contrast threshold:", quantile
+        print("Percentile tag contrast threshold:", quantile)
 
     if absolute == -999 and quantile <= 0:
-        print "\nInvalid threshold!!!"
+        print("\nInvalid threshold!!!")
         sys.exit(usage)
 
     load_Data(input_file, out_file, quantile, absolute, color, header,

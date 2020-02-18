@@ -80,7 +80,7 @@ if __name__ == '__main__':
                     # getting the chr number and converting to romans
                     romanValue = write_roman(int(temp[0][3:]))
                     temp[0] = "chr" + str(romanValue)
-                    if temp[3] > 0:
+                    if int(temp[3]) > 0:
                         temp[3] = str(-int(temp[3]))
                     # print temp
                     filecontents.append(temp)
@@ -104,5 +104,5 @@ if __name__ == '__main__':
 
     data = pd.DataFrame(filecontents, columns=(
         'chr', 'start', 'end', 'genome_coverage'))
-    print data[0:10]
+    print(data[0:10])
     data.to_csv('processed.bedGraph', sep='\t', header=False, index=False)

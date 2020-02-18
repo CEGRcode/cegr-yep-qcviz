@@ -106,10 +106,10 @@ if __name__ == '__main__':
 
     # create the output folder if it doesn't exist
     if os.path.exists("./output"):
-        print "Using the existing output directory"
+        print("Using the existing output directory")
         # pass
     else:
-        print "creating the output directory"
+        print("creating the output directory")
         os.mkdir("./output")
 
     processText(args.fimoText)

@@ -116,8 +116,8 @@ def plot_heatmap(data01, c, out_file_name, upper_lim, lower_lim, row_num, col_nu
     # Draw a horizontal line through the midpoint.
     plt.axvline(color='black', linestyle='--', x=locs[mid], linewidth=2)
 
-    print "\n DEBUG INFO \n locs : {} \n length_locs : {} \n labels : {} \n length_labels:{}\n".format(
-        locs, len(locs), labels, len(labels))
+    print("\n DEBUG INFO \n locs : {} \n length_locs : {} \n labels : {} \n length_labels:{}\n".format(
+        locs, len(locs), labels, len(labels)))
 
     plt.yticks([])
     plt.xlabel(xlabel, fontsize=14)
@@ -129,7 +129,7 @@ def plot_heatmap(data01, c, out_file_name, upper_lim, lower_lim, row_num, col_nu
     plt.setp(ax.spines.values(), linewidth=2)
 
     plt.savefig(out_file_name, bbox_inches='tight',
-                pad_inches=0.05, frameon=False, dpi=ddpi)
+                pad_inches=0.05, facecolor=None, dpi=ddpi)
 
 
 def plot_colorbar(data01, c, out_file_name, row_num, col_num, categories):
@@ -180,8 +180,8 @@ def plot_colorbar(data01, c, out_file_name, row_num, col_num, categories):
     unbpos = int(unbheight / 2 + topunb)
 
     # positions for the values
-    print "rp: {}, stm: {}, ess : {}, cof : {}, unb : {}, trna : {}".format(
-        rppos, stmpos, srgpos, cycpos, cofpos, unbpos)
+    print("rp: {}, stm: {}, ess : {}, cof : {}, unb : {}, trna : {}".format(
+        rppos, stmpos, srgpos, cycpos, cofpos, unbpos))
 
     # The default transform specifies that text is in data co-ordinates, that is even though the
     # image is compressed , the point are plotted based on datapoint in (x,y) like a graph
@@ -285,11 +285,11 @@ def load_Data(input_file, out_file, upper_lim, lower_lim, color, header, start_c
         data0.append(tmp[start_col:])
 
     data0 = np.array(data0, dtype=float)
-    print "# sites in the heatmap", sites
+    print("# sites in the heatmap", sites)
 
     # creating the np-array to plot the colorbar
     dataGenes = np.array(dataGenes, dtype=float)
-    print "catergoryCount : {}".format(catergoryCount)
+    print("catergoryCount : {}".format(catergoryCount))
 
     if row_num == -999:
         row_num = data0.shape[0]
@@ -323,7 +323,7 @@ def load_Data(input_file, out_file, upper_lim, lower_lim, color, header, start_c
 
     # checking if we need to plot the color bar
     if generateColorbar == '1':
-        print "Creating the colobar"
+        print("Creating the colobar")
         mycolors = ['#ff2600', '#ffd54f', '#43a047',
                     '#0096ff', '#9437ff', '#9e9e9e']
         colors = []
@@ -363,7 +363,7 @@ if __name__ == '__main__':
         if temp[0] not in params.keys():
             params[temp[0]] = temp[1]
 
-    print " \n Parameters for the heatmap"
+    print(" \n Parameters for the heatmap")
     pprint.pprint(params)
     upper_lim = float(params['upper_threshold'])
     lower_lim = int(params['lower_threshold'])

@@ -25,7 +25,7 @@ def sortData(sense):
     combinedSort = combined.sort_values(
         by='sum', ascending=False, na_position='first')
 
-    print combinedSort[0:10]
+    print(combinedSort[0:10])
     # removing the sum column after sorting, so that data can be written into new tabular file.
     data = combinedSort.drop(['sum'], axis=1)
 
