@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<macros>
+    <xml name="citations_one">
+        <citations>
+            <citation type="bibtex">
+                @unpublished{None,
+                author = {Greg Von Kuster},
+                title = {None},
+                year = {None},
+                eprint = {None},
+                url = {http://www.huck.psu.edu/content/research/independent-centers-excellence/center-for-eukaryotic-gene-regulation}
+            }</citation>
+        </citations>
+    </xml>    
+    <xml name="citations_two">
+        <citations>
+            <citation type="bibtex">
+                @unpublished{None,
+                author = {Ali Nematbakhsh},
+                title = {None},
+                year = {None},
+                eprint = {None},
+                url = {https://www.cegr.psu.edu/}
+            }</citation>
+        </citations>
+    </xml>
+       <xml name="citations_three">
+        <citations>
+            <citation type="bibtex">
+                @unpublished{None,
+                author = {Epigenomics Core Facility (EGC) group at Cornell Univesity},
+                title  = {brc_epigenomics@cornell.edu},
+		email = {brc_epigenomics@cornell.edu}
+		
+            }</citation>
+        </citations>
+    </xml>
+
+</macros>

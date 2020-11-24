@@ -1,0 +1,31 @@
+<tool id="tagpileup_tabular_to_json" name="Tagpileup Format From Tabular To JSON" version="1.0.0">
+	<description>
+	convert output of tagpileup from tabular format to JSON format
+</description>
+
+    <macros>
+        <import>macros_citation.xml</import>
+    </macros>
+    <command> 
+        <![CDATA[
+        perl $__tool_directory__/tagpileup_tabular_to_json.pl   "$input_tabular_format_file"  '$output_json_format_file'
+]]>
+    </command>
+    <inputs>
+        <param name="input_tabular_format_file" type="data" label=" name of tabular file " />
+    </inputs>
+
+    <outputs>
+        <data name="output_json_format_file" type="data" format="json"  label="${tool.name} on ${on_string}"/>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+**What it does**
+
+This tool reformat tag pileup output to one dimensional JSON format.
+    </help>
+
+    <expand macro="citations_three" />
+</tool>
+
